@@ -36,10 +36,8 @@ var knob = (function (global) {
         this.element = null;
         this.displayValue = null;
 
-        // copy config
-        this.config = { 
-            ... DEFAULT_CONFIG
-        };
+        this.config = Object.assign({}, DEFAULT_CONFIG);
+        
         this.value = this.config.value;
 
         // create canvas
@@ -115,10 +113,7 @@ var knob = (function (global) {
          * @returns {Knob} this
          */
         configure: function (config) {
-            this.config = { 
-                ... this.config,
-                ... config
-            };
+            this.config = Object.assign(this.config, config);
             this.value = this.config.value;
             this.element.width = this.config.radius;
             this.element.height = this.config.radius;
