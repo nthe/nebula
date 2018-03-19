@@ -97,7 +97,7 @@ describe("Knob", () => {
     });
 
     it('should decrease value when mouse moved down', () => {
-        let initValue = 0.5;
+        let initValue = 0.025;
         knob.setValue(initValue);
         let mouseMoveEvent = new window.MouseEvent('mousemove', { 
             view: window,

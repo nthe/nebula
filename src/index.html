@@ -5,51 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        canvas[id*='knob-'] {
-            margin: 8px 8px;
+        body {
+            /* display: flex; */
+            background-color: #333;
+            padding: 0;
+            margin: 0;
+        }
+        iframe {
+            display: block;
+            box-shadow: 0 0 8px #111;
+            height: 64%;
+            width: 40%;
+            min-width: 600px;
+            margin: 16px auto;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <script src="js/knob.js"></script>
-    <script>
-        function printer(value, dw, who) {
-            console.log(`(${who.id}) => ${value.toFixed(2)} / ${dw.toFixed(2)}`);
-        };
-
-        const k = Knob('knob-1', document.body)
-            .configure({
-                rangeStrokeColor: '#fc1',
-                indicatorStrokeColor: '#fff',
-                lineWidth: 12,
-                fontSize: 50,
-                value: 0.2
-            });
-            // .onChange = printer;
-
-        Knob('knob-2', document.body)
-            .configure({
-                rangeStrokeColor: '#0ff',
-                backdropStrokeColor: '#07a',
-                indicatorStrokeColor: '#000',
-                lineWidth: 8,
-                fontSize: 36,
-                radius: 100,
-                value: 0.6
-            });
-            // .onChange = (val) => k.setValue(val);
-
-        Knob('knob-3', document.body)
-            .configure({
-                indicatorStrokeColor: '#333',
-                rangeStrokeColor: '#777',
-                backdropStrokeColor: '#ddd',
-                lineWidth: 4,
-                fontSize: 32,
-                radius: 80,
-                value: 0.5 
-            });
-
-    </script>
+    <iframe src="knobs.html" frameborder="0"></iframe>
+    <iframe src="sliders.html" frameborder="0"></iframe>
 </body>
 </html>

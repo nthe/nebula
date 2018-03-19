@@ -4,13 +4,23 @@ var knob = (function (global) {
     const DEFAULT_CONFIG = {
         value: 0.5,
         radius: 120,
-        fontSize: 24,
         lineWidth: 10,
+        sweepAngle: 180,
+        startAngle: 180,
+        fontSize: 24,
+        fontColor: '#333',
         fontFamily: 'segoe ui',
-        rangeStrokeColor: '#0af',
-        indicatorStrokeColor: '#fc1',
-        backdropStrokeColor: '#424242'
+        rangeColor: '#0af',
+        indicatorColor: '#fc1',
+        backdropColor: '#424242'
     };
+
+    /**
+     * @function toRadians
+     * @description convert angle from degrees to radians
+     * @param {number} degrees angle in degress
+     */
+    const toRadians = (degrees) => degrees * (Math.PI / 180);
 
     /**
      * @constructor
@@ -68,10 +78,12 @@ var knob = (function (global) {
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
             
             let size = this.ctx.canvas.width / 2;
-            let angle = (2 * Math.PI) * this.value + Math.PI / 2;
+            let angle = toRadians(this.config.sweepAngle) * 
+                this.value + toRadians(this.config.startAngle);
             
             // display text
             this.ctx.font = `${this.config.fontSize}px ${this.config.fontFamily}`;
+            this.ctx.fillStyle = this.config.fontColor;
             this.ctx.textAlign = "center";
             this.ctx.textBaseline = "middle";
             this.ctx.fillText(
@@ -82,22 +94,34 @@ var knob = (function (global) {
             
             // backdrop
             this.ctx.lineWidth = this.config.lineWidth;
-            this.ctx.strokeStyle = this.config.backdropStrokeColor;
+            this.ctx.strokeStyle = this.config.backdropColor;
             this.ctx.beginPath();
-            this.ctx.arc(size, size, size - (this.config.lineWidth / 2), 0, 2 * Math.PI);
+            this.ctx.arc(
+                size, 
+                size, 
+                size - (this.config.lineWidth / 2), 
+                toRadians(this.config.startAngle) - 0.04, 
+                toRadians((this.config.startAngle + this.config.sweepAngle)) + 0.04
+            );
             this.ctx.stroke();
 
             // value indicator
             this.ctx.lineWidth = this.config.lineWidth - 4;
-            this.ctx.strokeStyle = this.config.rangeStrokeColor;
+            this.ctx.strokeStyle = this.config.rangeColor;
             this.ctx.beginPath();
-            this.ctx.arc(size, size, size - (this.config.lineWidth / 2), Math.PI / 2, angle);
+            this.ctx.arc(
+                size, 
+                size, 
+                size - (this.config.lineWidth / 2), 
+                toRadians(this.config.startAngle),
+                angle
+            );
             this.ctx.stroke();
 
             this.ctx.lineWidth = this.config.lineWidth - 4;
-            this.ctx.strokeStyle = this.config.indicatorStrokeColor;
+            this.ctx.strokeStyle = this.config.indicatorColor;
             this.ctx.beginPath();
-            this.ctx.arc(size, size, size - (this.config.lineWidth / 2), angle - 0.05, angle + 0.05);
+            this.ctx.arc(size, size, size - (this.config.lineWidth / 2), angle - 0.02, angle + 0.02);
             this.ctx.stroke();
 
             // trigger callbacks
@@ -139,17 +163,18 @@ var knob = (function (global) {
          * @param {MouseEvent} event mouse event
          */
         mouseDragHandler: function (event) {
-            event = event || global.event;
-            
+            event.preventDefault();
             let initX = event.clientX;
             let initY = event.clientY;
 
             global.document.onmouseup = (e) => {
+                e.preventDefault();
                 global.document.onmouseup = null;
                 global.document.onmousemove = null;
             };
             
             global.document.onmousemove = (e) => {
+                e.preventDefault();
                 if (e.clientY > initY) {
                     this.value -= 0.025;
                 } else {
@@ -220,8 +245,7 @@ if (typeof exports === 'undefined') {
 } 
 // manual load in node env (mock window)
 else {
-    function load (window) {
+    exports.KnobMock = function (window) {
         knob(window);
-    }
-    exports.KnobMock = load;    
+    } 
 }
