@@ -1,0 +1,72 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #ddd;
+        }
+        strong {
+            font-size: 18px;
+            text-decoration: underline;
+        }
+        canvas[id*='slider-'] {
+            margin: 8px 16px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <code>
+        <pre>
+
+        <strong>Create element</strong>
+
+        const slider = Slider('slider-1', document.body);
+        
+
+        <strong>Customize (optional)</strong>
+        
+        slider.configure({
+            value: 0.5,                 // initial value
+            width: 120,                 // width of slider
+            lineWidth: 10,              // width of line
+            fontSize: 24,               // font size
+            fontFamily: 'segoe ui',     // font family
+            rangeColor: '#0af',         // color of range indicator
+            indicatorColor: '#fc1',     // color of value indicator
+            backdropColor: '#424242'    // color of backdrop
+        });
+        
+
+        <strong>Add listener (optional)</strong>
+        
+        slider.onChange = (msg) => console.log(msg);
+
+        </pre>
+    </code>
+    <script src="js/slider.js"></script>
+    <script>
+        Slider('slider-1', document.body)
+            .configure({
+                rangeColor: '#f31',
+                indicatorColor: '#531',
+                backdropColor: '#531',
+                lineWidth: 20,
+                fontSize: 24
+            });
+        
+        Slider('slider-2', document.body)
+            .configure({
+                rangeColor: '#aaa',
+                indicatorColor: '#aaa',
+                backdropColor: '#444',
+                lineWidth: 20
+            });
+    </script>
+</body>
+</html>
