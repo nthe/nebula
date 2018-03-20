@@ -176,9 +176,9 @@ var knob = (function (global) {
             global.document.onmousemove = (e) => {
                 e.preventDefault();
                 if (e.clientY > initY) {
-                    this.value -= 0.025;
+                    this.value -= 0.02;
                 } else {
-                    this.value += 0.025;
+                    this.value += 0.02;
                 }
                 initY = e.clientY;
                 initX = e.clientX;

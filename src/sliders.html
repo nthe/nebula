@@ -6,7 +6,7 @@
     <title>Document</title>
     <style>
         body {
-            background-color: #222;
+            /* background-color: #222; */
             color: #ddd;
         }
         strong {
@@ -51,6 +51,16 @@
     </code>
     <script src="js/slider.js"></script>
     <script>
+        Slider('slider-2', document.body)
+            .configure({
+                rangeColor: '#aaa',
+                indicatorColor: '#aaa',
+                backdropColor: '#444',
+                lineWidth: 2,
+                showHandle: true,
+                handleRadius: 6
+            });
+            
         Slider('slider-1', document.body)
             .configure({
                 rangeColor: '#f31',
@@ -60,13 +70,6 @@
                 fontSize: 24
             });
         
-        Slider('slider-2', document.body)
-            .configure({
-                rangeColor: '#aaa',
-                indicatorColor: '#aaa',
-                backdropColor: '#444',
-                lineWidth: 20
-            });
     </script>
 </body>
 </html>

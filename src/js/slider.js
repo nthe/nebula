@@ -10,7 +10,9 @@ var slider = (function (global) {
         fontFamily: 'segoe ui',
         rangeColor: '#0af',
         indicatorColor: '#fc1',
-        backdropColor: '#424242'
+        backdropColor: '#424242',
+        showHandle: false,
+        handleRadius: 12
     };
   
     /**
@@ -59,6 +61,28 @@ var slider = (function (global) {
 
     Slider.prototype = {
 
+
+        /**
+         * @property
+         * @description helper method for diameter calculation
+         * @returns {number} diameter of handle
+         */
+        get handleDiameter () {
+            return this.config.handleRadius * 2;
+        },
+
+        get totalWidth () {
+
+        },
+
+        get totalHeight () {
+            return this.handleDiameter + Math.max(this.config.labelSize, this.config.valueSize);
+        },
+
+        get sliderMaxX () {
+            return this.totalWidth - this.handleRadius;
+        },
+        
         /**
          * @method render
          * @description (re)render slider
@@ -79,7 +103,7 @@ var slider = (function (global) {
             this.ctx.fillText(
                 this.displayFunction().toFixed(0), 
                 this.ctx.canvas.width,
-                size / 2 - 4
+                20 + size / 2 - 4
             );
             this.ctx.font = `${12}px ${this.config.fontFamily}`;
             this.ctx.textAlign = "left";
@@ -87,31 +111,37 @@ var slider = (function (global) {
             this.ctx.fillText(
                 'Slider', 
                 0,
-                size / 2 - 4
+                20 + size / 2 - 4
             );
             // backdrop
             this.ctx.lineWidth = this.config.lineWidth;
             this.ctx.strokeStyle = this.config.backdropColor;
             this.ctx.beginPath();
-            this.ctx.moveTo(0, 0);
-            this.ctx.lineTo(150, 0);
+            this.ctx.moveTo(0, 20);
+            this.ctx.lineTo(150, 20);
             this.ctx.stroke();
 
             // value indicator
             this.ctx.lineWidth = this.config.lineWidth - 4;
             this.ctx.strokeStyle = this.config.rangeColor;
             this.ctx.beginPath();
-            this.ctx.moveTo(0, 0);
-            this.ctx.lineTo(progress, 0);
+            this.ctx.moveTo(0, 20);
+            this.ctx.lineTo(progress, 20);
             this.ctx.stroke();
 
             this.ctx.lineWidth = this.config.lineWidth - 4;
             this.ctx.strokeStyle = this.config.indicatorColor;
             this.ctx.beginPath();
-            this.ctx.moveTo(progress - 2, 0);
-            this.ctx.lineTo(progress, 0);
+            this.ctx.moveTo(progress - 2, 20);
+            this.ctx.lineTo(progress, 20);
             this.ctx.stroke();
 
+            if(this.config.showHandle) {
+                this.ctx.fillStyle = '#fff';//this.config.rangeColor;
+                this.ctx.beginPath();
+                this.ctx.arc(progress, 20, this.config.handleRadius, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
             // trigger callbacks
             this.onChange(this.value, this.displayValue, this);
 
@@ -123,6 +153,17 @@ var slider = (function (global) {
          * @description update configuration of slider
          * @param {object} config new (or partial) configuration
          * @returns {Slider} this
+         * 
+         * 
+         * CONSTRAINTS:
+         *  - handleDiameter must be at least lineWidth
+         *
+         * handleRadius = handleDiameter / 2
+         * totalWidth   = handleDiameter + width
+         * totalHeight  = handleDiameter + offset + Math.max(labelSize, valueSize)
+         * minX         = handleRadius
+         * maxX         = totalWidth - handleRadius
+         * y            = handleRadius
          */
         configure: function (config) {
             this.config = Object.assign(this.config, config);
@@ -163,13 +204,9 @@ var slider = (function (global) {
             
             global.document.onmousemove = (e) => {
                 e.preventDefault();
-                if (e.clientY > initY) {
-                    this.value -= 0.025;
-                } else {
-                    this.value += 0.025;
-                }
-                initY = e.clientY;
-                initX = e.clientX;
+
+                let off = this.ctx.canvas.getBoundingClientRect().x;
+                this.value = ((e.clientX - off) / this.config.width);
                 this.value = this.value >= 1 ? 1 : this.value;
                 this.value = this.value <= 0 ? 0 : this.value;
                 this.render();
