@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>Elements</title>
     
     <style>
         body {
@@ -14,17 +13,12 @@
             margin: 0;
         }
 
-        canvas[id*='knob-'] {
+        canvas[id*='elements-'] {
             margin: 8px 16px;
             vertical-align: middle;
         }
 
-        canvas[id*='slider-'] {
-            margin: 8px 16px;
-            vertical-align: middle;
-        }
-
-        span[id*='label-'] {
+        span[id*='elements-'] {
             margin: 8px 16px;
             vertical-align: middle;
         }
@@ -32,12 +26,7 @@
 </head>
 
 <body>
-    <!-- <iframe src="js/knob/knobs.html" frameborder="0"></iframe>
-    <iframe src="js/slider/sliders.html" frameborder="0"></iframe>
-    <iframe src="js/label/labels.html" frameborder="0"></iframe> -->
-    <script src="js/knob/knob.js"></script>
-    <script src="js/slider/slider.js"></script>
-    <script src="js/label/label.js"></script>
+    <script src="elements.js"></script>
     <script>
         // Slider('slider-2', document.body)
         //     .configure({
@@ -50,56 +39,39 @@
         //         vertical: false
         //     });
 
-        // Slider('slider-3', document.body).configure({ lineWidth: 20 });
-
-        // Slider('slider-3', document.body).configure({
-        //     lineWidth: 4,
-        //     vertical: true,
-        //     showHandle: true,
-        //     handleColor: '#fff',
-        //     rangeColor: '#aaa',
-        //     handleRadius: 8
-        // });
-
-        // Slider('slider-1', document.body)
+        // const k = Circle('elements-knob-1', document.body)
         //     .configure({
-        //         rangeColor: '#f31',
-        //         indicatorColor: '#531',
-        //         backdropColor: '#531',
-        //         lineWidth: 20,
-        //         vertical: true
+        //         rangeColor: '#ccc',
+        //         indicatorColor: '#ccc',
+        //         backdropColor: '#444',
+        //         startAngle: 135,
+        //         sweepAngle: 270,
+        //         radius: 100,
+        //         lineWidth: 12,
+        //         fontSize: 32,
+        //         fontColor: '#fff',
+        //         value: 0.2,
+        //         showHandle: true
         //     });
 
-        const k = Knob('knob-1', document.body)
-            .configure({
-                rangeColor: '#ccc',
-                indicatorColor: '#ccc',
-                backdropColor: '#444',
-                startAngle: 135,
-                sweepAngle: 270,
-                radius: 100,
-                lineWidth: 12,
-                fontSize: 32,
-                fontColor: '#fff',
-                value: 0.2,
-                showHandle: true
-            });
+        // Circle('elements-knob-2', document.body)
+        //     .configure({
+        //         rangeColor: '#0ff',
+        //         backdropColor: '#033',
+        //         indicatorColor: '#0ff',
+        //         fontColor: '#fff',
+        //         lineWidth: 18,
+        //         fontSize: 24,
+        //         startAngle: 180,
+        //         radius: 100,
+        //         value: 0.68
+        //     });
 
-        Knob('knob-2', document.body)
-            .configure({
-                rangeColor: '#0ff',
-                backdropColor: '#033',
-                indicatorColor: '#0ff',
-                fontColor: '#fff',
-                lineWidth: 18,
-                fontSize: 24,
-                startAngle: 180,
-                radius: 100,
-                value: 0.68
-            });
+        const label = Label('elements-label-1', document.body);
+        label.element.style.top = 50;
+        label.element.style.left = 30;
 
-        const l = Label('label-1', document.body).update(0.25);
-        Knob('knob-3', document.body)
+        const circle = Circle('elements-knob-3', document.body)
             .configure({
                 indicatorColor: '#333',
                 rangeColor: '#3f1',
@@ -109,24 +81,26 @@
                 sweepAngle: 360,
                 lineWidth: 8,
                 fontSize: 32,
-                // radius: 100,
+                handleRadius: 4,
                 value: 0.93,
                 showHandle: true
-            }).subscribe(l);
-
-        Knob('knob-4', document.body)
-            .configure({
-                indicatorColor: '#333',
-                rangeColor: '#f30',
-                backdropColor: '#310',
-                fontColor: '#fff',
-                startAngle: 90,
-                sweepAngle: 270,
-                lineWidth: 14,
-                fontSize: 24,
-                radius: 100,
-                value: 0.57
             });
+        
+        circle.subscribe(label);
+
+        // Circle('elements-knob-4', document.body)
+        //     .configure({
+        //         indicatorColor: '#333',
+        //         rangeColor: '#f30',
+        //         backdropColor: '#310',
+        //         fontColor: '#fff',
+        //         startAngle: 90,
+        //         sweepAngle: 270,
+        //         lineWidth: 14,
+        //         fontSize: 24,
+        //         radius: 100,
+        //         value: 0.57
+        //     });
 
         
     </script>
