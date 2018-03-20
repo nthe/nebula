@@ -27,6 +27,13 @@ var elements = (function (global) {
      * @param {HTMLElement} parent host of new element
      */
     Label.init = function(id, parent) {
+
+        if (typeof id === 'undefined') {
+            throw '(Label) id is required';
+        }
+        
+        parent = parent || global.document.body;
+
         this.id = id;
         this.element = null;
         this.displayValue = null;
@@ -106,19 +113,60 @@ var elements = (function (global) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // default configuration of knob/gauge
     const DEFAULT_CIRCLE_CONFIG = {
-        value: 0.5,
+        value: 0.93,
         radius: 120,
-        lineWidth: 10,
-        handleRadius: 8,
-        sweepAngle: 180,
+        lineWidth: 16,
         startAngle: 180,
-        rangeColor: '#0af',
-        indicatorColor: '#fc1',
-        backdropColor: '#424242',
+        sweepAngle: 360,
+        backdropPadding: 4,
+        showHandle: true,
+        handleRadius: 2,
+        handleColor: '#333',
+        rangeColor: '#fc1',
+        backdropColor: '#330',
+        indicatorColor: '#333',
         rounded: true,
-        showHandle: false
     };
 
     /**
@@ -147,6 +195,13 @@ var elements = (function (global) {
      * @param {HTMLElement} parent host of new element
      */
     Circle.init = function(id, parent) {
+        
+        if (typeof id === 'undefined') {
+            throw '(Label) id is required';
+        }
+        
+        parent = parent || global.document.body;
+
         this.id = id;
         this.ctx = null;
         this.element = null;
@@ -201,7 +256,7 @@ var elements = (function (global) {
             this.ctx.stroke();
 
             // value indicator
-            this.ctx.lineWidth = this.config.lineWidth - 8;
+            this.ctx.lineWidth = this.config.lineWidth - this.config.backdropPadding * 2;
             this.ctx.strokeStyle = this.config.rangeColor;
             this.ctx.beginPath();
             this.ctx.arc(
@@ -215,7 +270,7 @@ var elements = (function (global) {
 
             if(this.config.showHandle) {
                 this.ctx.beginPath();
-                this.ctx.lineWidth = this.config.handleRadius;
+                this.ctx.lineWidth = this.config.handleRadius * 2;
                 this.ctx.arc(
                     size, 
                     size, 
@@ -258,7 +313,6 @@ var elements = (function (global) {
          */
         mouseDragHandler: function (event) {
             event.preventDefault();
-            let initX = event.clientX;
             let initY = event.clientY;
 
             global.document.onmouseup = (e) => {
@@ -275,7 +329,6 @@ var elements = (function (global) {
                     this.value += 0.03;
                 }
                 initY = e.clientY;
-                initX = e.clientX;
                 this.value = this.value >= 1 ? 1 : this.value;
                 this.value = this.value <= 0 ? 0 : this.value;
                 this.render();
@@ -361,6 +414,45 @@ var elements = (function (global) {
 
     // expose api
     global.Circle = Circle;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
