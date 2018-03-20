@@ -112,7 +112,7 @@ var slider = (function (global) {
             let progress = this.value * this.config.width + this.config.handleRadius;
             
             // backdrop
-            this.ctx.lineWidth = this.config.lineWidth * 2;
+            this.ctx.lineWidth = this.config.lineWidth;
             this.ctx.strokeStyle = this.config.backdropColor;
             this.ctx.beginPath();
             this.ctx.moveTo(this.sliderMinX, this.sliderMinY);
@@ -120,11 +120,11 @@ var slider = (function (global) {
             this.ctx.stroke();
 
             // value indicator
-            this.ctx.lineWidth = (this.config.lineWidth * 2);
+            this.ctx.lineWidth = this.config.lineWidth;
             this.ctx.strokeStyle = this.config.rangeColor;
             this.ctx.beginPath();
-            this.ctx.moveTo(this.sliderMinX, this.sliderMinY);
-            this.ctx.lineTo(progress, this.sliderMinY);
+            this.ctx.moveTo(this.sliderMinX, this.sliderMinY);// + this.config.lineWidth);
+            this.ctx.lineTo(progress, this.sliderMinY);// + this.config.lineWidth);
             this.ctx.stroke();
 
             if(this.config.showHandle) {

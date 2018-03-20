@@ -2,7 +2,7 @@ var label = (function (global) {
 
     const DEFAULT_CONFIG = {
         value: 0.5,
-        color: '#fc1',
+        color: '#ddd',
         fontSize: 24,
         fontFamily: 'Roboto',
     };
@@ -53,7 +53,7 @@ var label = (function (global) {
          * @description transformation function for display purposes
          * @returns {number}
          */
-        transformer: ((value) => value),
+        transformer: ((value) => value.toFixed(2)),
         
         /**
          * @method render

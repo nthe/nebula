@@ -1,27 +1,135 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    
     <style>
         body {
             background-color: #222;
             padding: 0;
             margin: 0;
         }
-        iframe {
-            box-sizing: border-box;
-            height: 90%;
-            width: 30%;
-            margin: 0 8px;
-            border: none;
+
+        canvas[id*='knob-'] {
+            margin: 8px 16px;
+            vertical-align: middle;
+        }
+
+        canvas[id*='slider-'] {
+            margin: 8px 16px;
+            vertical-align: middle;
+        }
+
+        span[id*='label-'] {
+            margin: 8px 16px;
+            vertical-align: middle;
         }
     </style>
 </head>
+
 <body>
-    <iframe src="js/knob/knobs.html" frameborder="0"></iframe>
+    <!-- <iframe src="js/knob/knobs.html" frameborder="0"></iframe>
     <iframe src="js/slider/sliders.html" frameborder="0"></iframe>
-    <iframe src="js/label/labels.html" frameborder="0"></iframe>
+    <iframe src="js/label/labels.html" frameborder="0"></iframe> -->
+    <script src="js/knob/knob.js"></script>
+    <script src="js/slider/slider.js"></script>
+    <script src="js/label/label.js"></script>
+    <script>
+        // Slider('slider-2', document.body)
+        //     .configure({
+        //         rangeColor: '#aaa',
+        //         indicatorColor: '#aaa',
+        //         backdropColor: '#444',
+        //         lineWidth: 1,
+        //         showHandle: true,
+        //         handleRadius: 5,
+        //         vertical: false
+        //     });
+
+        // Slider('slider-3', document.body).configure({ lineWidth: 20 });
+
+        // Slider('slider-3', document.body).configure({
+        //     lineWidth: 4,
+        //     vertical: true,
+        //     showHandle: true,
+        //     handleColor: '#fff',
+        //     rangeColor: '#aaa',
+        //     handleRadius: 8
+        // });
+
+        // Slider('slider-1', document.body)
+        //     .configure({
+        //         rangeColor: '#f31',
+        //         indicatorColor: '#531',
+        //         backdropColor: '#531',
+        //         lineWidth: 20,
+        //         vertical: true
+        //     });
+
+        const k = Knob('knob-1', document.body)
+            .configure({
+                rangeColor: '#ccc',
+                indicatorColor: '#ccc',
+                backdropColor: '#444',
+                startAngle: 135,
+                sweepAngle: 270,
+                radius: 100,
+                lineWidth: 12,
+                fontSize: 32,
+                fontColor: '#fff',
+                value: 0.2,
+                showHandle: true
+            });
+
+        Knob('knob-2', document.body)
+            .configure({
+                rangeColor: '#0ff',
+                backdropColor: '#033',
+                indicatorColor: '#0ff',
+                fontColor: '#fff',
+                lineWidth: 18,
+                fontSize: 24,
+                startAngle: 180,
+                radius: 100,
+                value: 0.68
+            });
+
+        const l = Label('label-1', document.body).update(0.25);
+        Knob('knob-3', document.body)
+            .configure({
+                indicatorColor: '#333',
+                rangeColor: '#3f1',
+                backdropColor: '#130',
+                fontColor: '#fff',
+                startAngle: 180,
+                sweepAngle: 360,
+                lineWidth: 8,
+                fontSize: 32,
+                // radius: 100,
+                value: 0.93,
+                showHandle: true
+            }).subscribe(l);
+
+        Knob('knob-4', document.body)
+            .configure({
+                indicatorColor: '#333',
+                rangeColor: '#f30',
+                backdropColor: '#310',
+                fontColor: '#fff',
+                startAngle: 90,
+                sweepAngle: 270,
+                lineWidth: 14,
+                fontSize: 24,
+                radius: 100,
+                value: 0.57
+            });
+
+        
+    </script>
 </body>
+
 </html>

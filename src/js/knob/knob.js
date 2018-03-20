@@ -43,6 +43,7 @@ var knob = (function (global) {
         this.id = id;
         this.ctx = null;
         this.element = null;
+        this.subscribers = [];
 
         this.config = Object.assign({}, DEFAULT_CONFIG);
         
@@ -90,10 +91,6 @@ var knob = (function (global) {
                 toRadians(this.config.startAngle) - 0.04, 
                 toRadians((this.config.startAngle + this.config.sweepAngle)) + 0.04
             );
-            // this.ctx.shadowColor = '#111';
-            // this.ctx.shadowBlur = 4;
-            // this.ctx.shadowOffsetX = 15;
-            // this.ctx.shadowOffsetY = 15;
             this.ctx.stroke();
 
             // value indicator
@@ -113,13 +110,19 @@ var knob = (function (global) {
                 this.ctx.lineWidth = this.config.lineWidth - 4;
                 this.ctx.strokeStyle = this.config.indicatorColor;
                 this.ctx.beginPath();
-                this.ctx.arc(size, size, size - (this.config.lineWidth / 2), angle - 0.01, angle + 0.01);
+                this.ctx.arc(
+                    size, 
+                    size, 
+                    size - (this.config.lineWidth / 2), 
+                    angle - 0.01, 
+                    angle + 0.01
+                );
                 this.ctx.stroke();
             }
 
             // trigger callbacks
-            this.onChange(this.value, this);
-
+            // this.onChange(this.value, this);
+            this.emit(this.value);
             return this;
         },
 
@@ -160,9 +163,9 @@ var knob = (function (global) {
             global.document.onmousemove = (e) => {
                 e.preventDefault();
                 if (e.clientY > initY) {
-                    this.value -= 0.02;
+                    this.value -= 0.03;
                 } else {
-                    this.value += 0.02;
+                    this.value += 0.03;
                 }
                 initY = e.clientY;
                 initX = e.clientX;
@@ -192,6 +195,46 @@ var knob = (function (global) {
          * @param {Knob} self this
          */
         onChange: ((value, displayValue, self) => {}),
+        
+        /**
+         * @method subscribe
+         * @description register callback for subscription
+         * @param {function} callback callback method
+         * @returns {Slider} this
+         */
+        subscribe: function (callback) {
+            if(!this.subscribers.indexOf(callback) < 0) {
+                return;
+            }
+            this.subscribers.push(callback);
+            return this;
+        },
+
+        /**
+         * @method unsubscribe
+         * @description un-register callback from subscription
+         * @param {function} callback callback method
+         * @returns {Slider} this
+         */
+        unsubscribe: function (callback) {
+            let position = this.subscribers.indexOf(callback);
+            if (position < 0) {
+                return;
+            }
+            this.subscribers.splice(position, 1);
+            return this;
+        },
+
+        /**
+         * @method emit
+         * @description calls callbacks of subscribers
+         * @param {any} data data to publish
+         * @returns {any} data
+         */
+        emit: function (data) {
+            this.subscribers.map(f => f.update(data));
+            return data;
+        },
 
         /**
          * @method deactivate
