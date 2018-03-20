@@ -5,14 +5,13 @@ var slider = (function (global) {
         value: 0.5,
         width: 120,
         lineWidth: 14,
-        fontSize: 14,
-        fontColor: '#eee',
-        fontFamily: 'segoe ui',
+        handleRadius: 0,
+        vertical: false,
+        showHandle: false,
         rangeColor: '#0af',
+        handleColor: '#fff',
         indicatorColor: '#fc1',
         backdropColor: '#424242',
-        showHandle: false,
-        handleRadius: 12
     };
   
     /**
@@ -40,7 +39,7 @@ var slider = (function (global) {
         this.displayValue = null;
 
         this.config = Object.assign({}, DEFAULT_CONFIG);
-        
+        this.subscribers = [];
         this.value = this.config.value;
 
         // create canvas
@@ -61,7 +60,6 @@ var slider = (function (global) {
 
     Slider.prototype = {
 
-
         /**
          * @property
          * @description helper method for diameter calculation
@@ -72,17 +70,107 @@ var slider = (function (global) {
         },
 
         get totalWidth () {
-
+            if(this.config.vertical) {
+                return Math.max(this.handleDiameter, this.config.lineWidth);
+            } else {
+                return this.handleDiameter + this.config.width;
+            }
         },
 
         get totalHeight () {
-            return this.handleDiameter + Math.max(this.config.labelSize, this.config.valueSize);
+            if(this.config.vertical) {
+                return this.handleDiameter + this.config.width;
+            } else {
+                return Math.max(this.handleDiameter, this.config.lineWidth);
+            }
+        },
+
+        get sliderMinX () {
+            return this.config.handleRadius;
         },
 
         get sliderMaxX () {
-            return this.totalWidth - this.handleRadius;
+            return this.totalWidth - this.config.handleRadius;
+        },
+
+        get sliderMinY () {
+            return this.config.handleRadius;
+        },
+
+        get sliderMaxY () {
+            return this.totalHeight - this.config.handleRadius;
         },
         
+        subscribe: function (callback) {
+            this.subscribers.push(callback);
+        },
+
+        /**
+         * @method render
+         * @description (re)render slider
+         * @return {Slider} this
+         */
+        render_horizontal: function () {       
+            
+            let progress = this.value * this.config.width + this.config.handleRadius;
+            
+            // backdrop
+            this.ctx.lineWidth = this.config.lineWidth * 2;
+            this.ctx.strokeStyle = this.config.backdropColor;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.sliderMinX, this.sliderMinY);
+            this.ctx.lineTo(this.sliderMaxX, this.sliderMaxY);
+            this.ctx.stroke();
+
+            // value indicator
+            this.ctx.lineWidth = (this.config.lineWidth * 2) - 4;
+            this.ctx.strokeStyle = this.config.rangeColor;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.sliderMinX, this.sliderMinY);
+            this.ctx.lineTo(progress, this.sliderMaxY);
+            this.ctx.stroke();
+
+            if(this.config.showHandle) {
+                this.ctx.fillStyle = this.config.handleColor;
+                this.ctx.beginPath();
+                this.ctx.arc(progress, this.sliderMinY, this.config.handleRadius, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        },
+
+        /**
+         * @method render
+         * @description (re)render slider
+         * @return {Slider} this
+         */
+        render_vertical: function () {       
+            
+            let progress = this.value * this.totalHeight + this.config.handleRadius;
+            
+            // backdrop
+            this.ctx.lineWidth = this.config.lineWidth * 2;
+            this.ctx.strokeStyle = this.config.backdropColor;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.sliderMinX, this.sliderMinY);
+            this.ctx.lineTo(this.sliderMinX, this.sliderMaxY);
+            this.ctx.stroke();
+
+            // value indicator
+            this.ctx.lineWidth = (this.config.lineWidth * 2);
+            this.ctx.strokeStyle = this.config.rangeColor;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.sliderMinX, this.sliderMaxY);
+            this.ctx.lineTo(this.sliderMinX, progress);
+            this.ctx.stroke();
+
+            if(this.config.showHandle) {
+                this.ctx.fillStyle = this.config.handleColor;
+                this.ctx.beginPath();
+                this.ctx.arc(this.sliderMinY, progress, this.config.handleRadius, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        },
+
         /**
          * @method render
          * @description (re)render slider
@@ -92,59 +180,20 @@ var slider = (function (global) {
             // clear
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
             
-            let size = this.ctx.canvas.width / 2;
-            let progress = this.value * this.config.width;
-            
-            // display text
-            this.ctx.font = `${this.config.fontSize}px ${this.config.fontFamily}`;
-            this.ctx.fillStyle = this.config.fontColor;
-            this.ctx.textAlign = "right";
-            this.ctx.textBaseline = "middle";
-            this.ctx.fillText(
-                this.displayFunction().toFixed(0), 
-                this.ctx.canvas.width,
-                20 + size / 2 - 4
-            );
-            this.ctx.font = `${12}px ${this.config.fontFamily}`;
-            this.ctx.textAlign = "left";
-            this.ctx.fillStyle = '#777';
-            this.ctx.fillText(
-                'Slider', 
-                0,
-                20 + size / 2 - 4
-            );
-            // backdrop
-            this.ctx.lineWidth = this.config.lineWidth;
-            this.ctx.strokeStyle = this.config.backdropColor;
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, 20);
-            this.ctx.lineTo(150, 20);
-            this.ctx.stroke();
-
-            // value indicator
-            this.ctx.lineWidth = this.config.lineWidth - 4;
-            this.ctx.strokeStyle = this.config.rangeColor;
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, 20);
-            this.ctx.lineTo(progress, 20);
-            this.ctx.stroke();
-
-            this.ctx.lineWidth = this.config.lineWidth - 4;
-            this.ctx.strokeStyle = this.config.indicatorColor;
-            this.ctx.beginPath();
-            this.ctx.moveTo(progress - 2, 20);
-            this.ctx.lineTo(progress, 20);
-            this.ctx.stroke();
-
-            if(this.config.showHandle) {
-                this.ctx.fillStyle = '#fff';//this.config.rangeColor;
-                this.ctx.beginPath();
-                this.ctx.arc(progress, 20, this.config.handleRadius, 0, Math.PI * 2);
-                this.ctx.fill();
+            // render
+            if(this.config.vertical) {
+                this.render_vertical();
+            } else {
+                this.render_horizontal();
             }
+
             // trigger callbacks
             this.onChange(this.value, this.displayValue, this);
-
+            
+            for(let c = 0; c < this.subscribers.length; c++) {
+                this.subscribers[c](this.value);
+            }
+            
             return this;
         },
 
@@ -153,23 +202,12 @@ var slider = (function (global) {
          * @description update configuration of slider
          * @param {object} config new (or partial) configuration
          * @returns {Slider} this
-         * 
-         * 
-         * CONSTRAINTS:
-         *  - handleDiameter must be at least lineWidth
-         *
-         * handleRadius = handleDiameter / 2
-         * totalWidth   = handleDiameter + width
-         * totalHeight  = handleDiameter + offset + Math.max(labelSize, valueSize)
-         * minX         = handleRadius
-         * maxX         = totalWidth - handleRadius
-         * y            = handleRadius
          */
         configure: function (config) {
             this.config = Object.assign(this.config, config);
             this.value = this.config.value;
-            this.element.width = this.config.width;
-            this.element.height = this.config.width;
+            this.element.width = this.totalWidth;
+            this.element.height = this.totalHeight;
             this.ctx.canvas.width = this.element.clientWidth;
             this.ctx.canvas.height = this.element.clientHeight;
             this.render();
@@ -193,20 +231,22 @@ var slider = (function (global) {
          */
         mouseDragHandler: function (event) {
             event.preventDefault();
-            let initX = event.clientX;
-            let initY = event.clientY;
 
-            global.document.onmouseup = (e) => {
-                e.preventDefault();
+            global.document.onmouseup = (event) => {
+                event.preventDefault();
                 global.document.onmouseup = null;
                 global.document.onmousemove = null;
             };
             
-            global.document.onmousemove = (e) => {
-                e.preventDefault();
-
-                let off = this.ctx.canvas.getBoundingClientRect().x;
-                this.value = ((e.clientX - off) / this.config.width);
+            global.document.onmousemove = (event) => {
+                event.preventDefault();
+                if(this.config.vertical) {
+                    let off = this.ctx.canvas.getBoundingClientRect().top;
+                    this.value = ((event.clientY - off) / this.totalHeight);
+                } else {
+                    let off = this.ctx.canvas.getBoundingClientRect().left;
+                    this.value = ((event.clientX - off) / this.config.width);
+                }
                 this.value = this.value >= 1 ? 1 : this.value;
                 this.value = this.value <= 0 ? 0 : this.value;
                 this.render();

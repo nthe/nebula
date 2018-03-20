@@ -12,7 +12,7 @@
             position: absolute;
         }
         strong {
-            font-size: 18px;
+            font-size: 14px;
             text-decoration: underline;
         }
         canvas[id*='knob-'] {
@@ -39,8 +39,6 @@
             lineWidth: 10,              // width of line
             startAngle: 180,            // start angle
             sweepAngle: 180,            // sweep angle
-            fontSize: 24,               // font size
-            fontFamily: 'segoe ui',     // font family
             rangeColor: '#0af',         // color of range indicator
             indicatorColor: '#fc1',     // color of value indicator
             backdropColor: '#424242'    // color of backdrop
@@ -53,7 +51,7 @@
 
         </pre>
     </code>
-    <script src="js/knob.js"></script>
+    <script src="knob.js"></script>
     <script>
         function printer(value, dw, who) {
             console.log(`(${who.id}) => ${value.toFixed(2)} / ${dw.toFixed(2)}`);

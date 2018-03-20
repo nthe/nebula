@@ -10,7 +10,7 @@
             color: #ddd;
         }
         strong {
-            font-size: 18px;
+            font-size: 14px;
             text-decoration: underline;
         }
         canvas[id*='slider-'] {
@@ -35,12 +35,15 @@
             value: 0.5,                 // initial value
             width: 120,                 // width of slider
             lineWidth: 10,              // width of line
-            fontSize: 24,               // font size
-            fontFamily: 'segoe ui',     // font family
+            vertical: false,            // verical orientation
+            handleRadius: 0,            // radius of handle
+            showHandle: false,          // toggle handle
+            handleColor: '#fff',        // color of handle
             rangeColor: '#0af',         // color of range indicator
             indicatorColor: '#fc1',     // color of value indicator
             backdropColor: '#424242'    // color of backdrop
         });
+
         
 
         <strong>Add listener (optional)</strong>
@@ -49,25 +52,28 @@
 
         </pre>
     </code>
-    <script src="js/slider.js"></script>
+    <script src="slider.js"></script>
     <script>
         Slider('slider-2', document.body)
             .configure({
                 rangeColor: '#aaa',
                 indicatorColor: '#aaa',
                 backdropColor: '#444',
-                lineWidth: 2,
+                lineWidth: 1,
                 showHandle: true,
-                handleRadius: 6
+                handleRadius: 5,
+                vertical: false
             });
             
+        Slider('slider-3', document.body).configure({lineWidth: 20});
+
         Slider('slider-1', document.body)
             .configure({
                 rangeColor: '#f31',
                 indicatorColor: '#531',
                 backdropColor: '#531',
                 lineWidth: 20,
-                fontSize: 24
+                vertical: true
             });
         
     </script>

@@ -7,9 +7,6 @@ var knob = (function (global) {
         lineWidth: 10,
         sweepAngle: 180,
         startAngle: 180,
-        fontSize: 24,
-        fontColor: '#333',
-        fontFamily: 'segoe ui',
         rangeColor: '#0af',
         indicatorColor: '#fc1',
         backdropColor: '#424242'
@@ -44,7 +41,6 @@ var knob = (function (global) {
         this.id = id;
         this.ctx = null;
         this.element = null;
-        this.displayValue = null;
 
         this.config = Object.assign({}, DEFAULT_CONFIG);
         
@@ -81,17 +77,6 @@ var knob = (function (global) {
             let angle = toRadians(this.config.sweepAngle) * 
                 this.value + toRadians(this.config.startAngle);
             
-            // display text
-            this.ctx.font = `${this.config.fontSize}px ${this.config.fontFamily}`;
-            this.ctx.fillStyle = this.config.fontColor;
-            this.ctx.textAlign = "center";
-            this.ctx.textBaseline = "middle";
-            this.ctx.fillText(
-                this.displayFunction().toFixed(0), 
-                size, 
-                size
-            );
-            
             // backdrop
             this.ctx.lineWidth = this.config.lineWidth;
             this.ctx.strokeStyle = this.config.backdropColor;
@@ -125,7 +110,7 @@ var knob = (function (global) {
             this.ctx.stroke();
 
             // trigger callbacks
-            this.onChange(this.value, this.displayValue, this);
+            this.onChange(this.value, this);
 
             return this;
         },
@@ -145,16 +130,6 @@ var knob = (function (global) {
             this.ctx.canvas.height = this.element.clientHeight;
             this.render();
             return this;
-        },
-
-        /**
-         * @method displayFunction
-         * @description function between internal and display value
-         * @returns {string} display value
-         */
-        displayFunction: function () {
-            this.displayValue = Math.pow(this.value * 10, 2);
-            return this.displayValue;
         },
 
         /**

@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+        body {
+            /* background-color: #222; */
+            color: #ddd;
+            height: 30%;
+            position: absolute;
+            font-family: 'Roboto', sans-serif;
+        }
+        strong {
+            font-size: 14px;
+            text-decoration: underline;
+        }
+        span[id*='label-'] {
+            margin: 8px 16px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <code>
+        <pre>
+
+        <strong>Create element</strong>
+
+        const label = Label('label-1', document.body);
+        
+
+        <strong>Customize (optional)</strong>
+        
+        label.configure({
+            value: 0.5,                 // initial value
+        });
+
+        </pre>
+    </code>
+    <script src="label.js"></script>
+    <script>
+
+        Label('label-1', document.body).update(0.25);
+        Label('label-2', document.body).update(13245.25);
+        Label('label-3', document.body).update(99.999);
+        
+
+    </script>
+</body>
+</html>
