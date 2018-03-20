@@ -9,7 +9,9 @@ var knob = (function (global) {
         startAngle: 180,
         rangeColor: '#0af',
         indicatorColor: '#fc1',
-        backdropColor: '#424242'
+        backdropColor: '#424242',
+        rounded: true,
+        showHandle: false
     };
 
     /**
@@ -88,10 +90,14 @@ var knob = (function (global) {
                 toRadians(this.config.startAngle) - 0.04, 
                 toRadians((this.config.startAngle + this.config.sweepAngle)) + 0.04
             );
+            // this.ctx.shadowColor = '#111';
+            // this.ctx.shadowBlur = 4;
+            // this.ctx.shadowOffsetX = 15;
+            // this.ctx.shadowOffsetY = 15;
             this.ctx.stroke();
 
             // value indicator
-            this.ctx.lineWidth = this.config.lineWidth - 4;
+            this.ctx.lineWidth = this.config.lineWidth - 8;
             this.ctx.strokeStyle = this.config.rangeColor;
             this.ctx.beginPath();
             this.ctx.arc(
@@ -103,11 +109,13 @@ var knob = (function (global) {
             );
             this.ctx.stroke();
 
-            this.ctx.lineWidth = this.config.lineWidth - 4;
-            this.ctx.strokeStyle = this.config.indicatorColor;
-            this.ctx.beginPath();
-            this.ctx.arc(size, size, size - (this.config.lineWidth / 2), angle - 0.02, angle + 0.02);
-            this.ctx.stroke();
+            if(this.config.showHandle) {
+                this.ctx.lineWidth = this.config.lineWidth - 4;
+                this.ctx.strokeStyle = this.config.indicatorColor;
+                this.ctx.beginPath();
+                this.ctx.arc(size, size, size - (this.config.lineWidth / 2), angle - 0.01, angle + 0.01);
+                this.ctx.stroke();
+            }
 
             // trigger callbacks
             this.onChange(this.value, this);
@@ -128,6 +136,7 @@ var knob = (function (global) {
             this.element.height = this.config.radius;
             this.ctx.canvas.width = this.element.clientWidth;
             this.ctx.canvas.height = this.element.clientHeight;
+            this.ctx.lineCap = this.config.rounded ? 'round' : 'butt';
             this.render();
             return this;
         },

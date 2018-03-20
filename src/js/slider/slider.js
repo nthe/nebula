@@ -12,6 +12,7 @@ var slider = (function (global) {
         handleColor: '#fff',
         indicatorColor: '#fc1',
         backdropColor: '#424242',
+        rounded: true
     };
   
     /**
@@ -100,10 +101,6 @@ var slider = (function (global) {
         get sliderMaxY () {
             return this.totalHeight - this.config.handleRadius;
         },
-        
-        subscribe: function (callback) {
-            this.subscribers.push(callback);
-        },
 
         /**
          * @method render
@@ -119,15 +116,15 @@ var slider = (function (global) {
             this.ctx.strokeStyle = this.config.backdropColor;
             this.ctx.beginPath();
             this.ctx.moveTo(this.sliderMinX, this.sliderMinY);
-            this.ctx.lineTo(this.sliderMaxX, this.sliderMaxY);
+            this.ctx.lineTo(this.sliderMaxX, this.sliderMinY);
             this.ctx.stroke();
 
             // value indicator
-            this.ctx.lineWidth = (this.config.lineWidth * 2) - 4;
+            this.ctx.lineWidth = (this.config.lineWidth * 2);
             this.ctx.strokeStyle = this.config.rangeColor;
             this.ctx.beginPath();
             this.ctx.moveTo(this.sliderMinX, this.sliderMinY);
-            this.ctx.lineTo(progress, this.sliderMaxY);
+            this.ctx.lineTo(progress, this.sliderMinY);
             this.ctx.stroke();
 
             if(this.config.showHandle) {
@@ -145,7 +142,7 @@ var slider = (function (global) {
          */
         render_vertical: function () {       
             
-            let progress = this.value * this.totalHeight + this.config.handleRadius;
+            let progress = this.value * this.totalHeight - this.config.handleRadius;
             
             // backdrop
             this.ctx.lineWidth = this.config.lineWidth * 2;
@@ -189,11 +186,7 @@ var slider = (function (global) {
 
             // trigger callbacks
             this.onChange(this.value, this.displayValue, this);
-            
-            for(let c = 0; c < this.subscribers.length; c++) {
-                this.subscribers[c](this.value);
-            }
-            
+            this.emit(this.value);
             return this;
         },
 
@@ -210,6 +203,7 @@ var slider = (function (global) {
             this.element.height = this.totalHeight;
             this.ctx.canvas.width = this.element.clientWidth;
             this.ctx.canvas.height = this.element.clientHeight;
+            this.ctx.lineCap = this.config.rounded ? 'round' : 'butt';
             this.render();
             return this;
         },
@@ -273,6 +267,46 @@ var slider = (function (global) {
          * @param {Slider} self this
          */
         onChange: ((value, displayValue, self) => {}),
+
+        /**
+         * @method subscribe
+         * @description register callback for subscription
+         * @param {function} callback callback method
+         * @returns {Slider} this
+         */
+        subscribe: function (callback) {
+            if(!this.subscribers.indexOf(callback) < 0) {
+                return;
+            }
+            this.subscribers.push(callback);
+            return this;
+        },
+
+        /**
+         * @method unsubscribe
+         * @description un-register callback from subscription
+         * @param {function} callback callback method
+         * @returns {Slider} this
+         */
+        unsubscribe: function (callback) {
+            let position = this.subscribers.indexOf(callback);
+            if (position < 0) {
+                return;
+            }
+            this.subscribers.splice(position, 1);
+            return this;
+        },
+
+        /**
+         * @method emit
+         * @description calls callbacks of subscribers
+         * @param {any} data data to publish
+         * @returns {any} data
+         */
+        emit: function (data) {
+            this.subscribers.map(f => f(data));
+            return data;
+        },
 
         /**
          * @method deactivate
