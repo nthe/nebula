@@ -11,6 +11,7 @@
   "author": "Juraj Onuska",
   "license": "ISC",
   "devDependencies": {
+    "browserify": "^16.1.1",
     "canvas-prebuilt": "^1.6.5-prerelease.1",
     "chai": "^4.1.2",
     "esdoc": "^1.0.4",

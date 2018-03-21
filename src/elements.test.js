@@ -14,7 +14,8 @@ describe("Circle", () => {
 
     // pass mocked window object for registration / export
     ElementsMock(window);    
-    const Circle = window.Circle;
+    // console.log(window.Elements);
+    const Circle = window.Elements.Circle;
     const document = window.document;
     const body = document.body;
     const $one = (el) => document.querySelector(el);
@@ -138,7 +139,7 @@ describe("Slider", () => {
 
     // pass mocked window object for registration / export
     ElementsMock(window);
-    const Slider = window.Slider;
+    const Slider = window.Elements.Slider;
     const document = window.document;
     const body = document.body;
     const $one = (el) => document.querySelector(el);

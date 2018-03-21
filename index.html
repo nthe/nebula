@@ -100,12 +100,12 @@
         
         const tutorial = document.querySelector('.tutorial');
 
-        const label = Label('elements-label-1', tutorial);
+        const label = Elements.Label('elements-label-1', tutorial);
         
         label.element.style.marginTop = 0;
         label.element.style.marginLeft = 48;
 
-        const circle = Circle('elements-knob-3', tutorial);
+        const circle = Elements.Circle('elements-knob-3', tutorial);
         
         circle.subscribe(label);
 

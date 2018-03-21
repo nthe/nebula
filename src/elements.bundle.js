@@ -1,41 +1,12 @@
+(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 var elements = (function (global) {
-    "use strict";
 
-    const CONFIGS = {
-        LABEL: {
-            value: 0.5,
-            color: '#ddd',
-            fontSize: 24,
-            fontFamily: 'Lucida Console',
-        },
-        CIRCLE: {
-            value: 0.93,
-            radius: 120,
-            lineWidth: 16,
-            startAngle: 180,
-            sweepAngle: 360,
-            backdropPadding: 4,
-            showHandle: true,
-            handleRadius: 2,
-            handleColor: '#333',
-            rangeColor: '#fc1',
-            backdropColor: '#330',
-            indicatorColor: '#333',
-            rounded: true,
-        },
-        SLIDER: {
-            value: 0.5,
-            width: 120,
-            lineWidth: 14,
-            handleRadius: 0,
-            vertical: false,
-            showHandle: false,
-            rangeColor: '#0af',
-            handleColor: '#fff',
-            indicatorColor: '#fc1',
-            backdropColor: '#424242',
-            rounded: true
-        }
+
+    const DEFAULT_LABEL_CONFIG = {
+        value: 0.5,
+        color: '#ddd',
+        fontSize: 24,
+        fontFamily: 'Lucida Console',
     };
 
     /**
@@ -62,7 +33,7 @@ var elements = (function (global) {
         this.id = id;
         this.element = null;
         this.displayValue = null;
-        this.config = Object.assign({}, CONFIGS.LABEL);
+        this.config = Object.assign({}, DEFAULT_LABEL_CONFIG);
         this.value = this.config.value;
         this.element = global.document.createElement("span");
         this.element.style.position = 'absolute';
@@ -128,6 +99,30 @@ var elements = (function (global) {
 
 
 
+
+
+
+
+
+
+
+    // default configuration of knob/gauge
+    const DEFAULT_CIRCLE_CONFIG = {
+        value: 0.93,
+        radius: 120,
+        lineWidth: 16,
+        startAngle: 180,
+        sweepAngle: 360,
+        backdropPadding: 4,
+        showHandle: true,
+        handleRadius: 2,
+        handleColor: '#333',
+        rangeColor: '#fc1',
+        backdropColor: '#330',
+        indicatorColor: '#333',
+        rounded: true,
+    };
+
     /**
      * @function toRadians
      * @description convert angle from degrees to radians
@@ -160,7 +155,7 @@ var elements = (function (global) {
         this.ctx = null;
         this.element = null;
         this.subscribers = [];
-        this.config = Object.assign({}, CONFIGS.CIRCLE);
+        this.config = Object.assign({}, DEFAULT_CIRCLE_CONFIG);
         this.value = this.config.value;
         this.element = global.document.createElement("canvas");
         this.element.id = this.id;
@@ -354,6 +349,26 @@ var elements = (function (global) {
 
 
 
+
+
+
+
+
+    // default configuration of slider
+    const DEFAULT_SLIDER_CONFIG = {
+        value: 0.5,
+        width: 120,
+        lineWidth: 14,
+        handleRadius: 0,
+        vertical: false,
+        showHandle: false,
+        rangeColor: '#0af',
+        handleColor: '#fff',
+        indicatorColor: '#fc1',
+        backdropColor: '#424242',
+        rounded: true
+    };
+  
     /**
      * @constructor
      * @constructs Slider
@@ -382,7 +397,7 @@ var elements = (function (global) {
         this.element = null;
         this.displayValue = null;
 
-        this.config = Object.assign({}, CONFIGS.SLIDER);
+        this.config = Object.assign({}, DEFAULT_SLIDER_CONFIG);
         this.subscribers = [];
         this.value = this.config.value;
         this.element = global.document.createElement("canvas");
@@ -660,3 +675,5 @@ else {
         elements(window);
     } 
 }
+
+},{}]},{},[1]);
