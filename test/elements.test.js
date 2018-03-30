@@ -1,4 +1,4 @@
-const ElementsMock = require('./elements').ElementsMock;
+const ElementsMock = require('../src/elements').ElementsMock;
 const expect = require('chai').expect;
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;

@@ -16,14 +16,6 @@
             
         }
 
-        main {
-            display: flex;
-            height: 100%;
-            width: 60%;
-            min-width: 750px;
-            margin: 0 auto;
-        }
-
         canvas[id*='elements-'] {
             margin: 8px 16px;
             vertical-align: middle;
@@ -39,76 +31,54 @@
             align-items: center;
             margin: 0 auto;
         }
-
-        section {
-            display: flex;
-            background-color: #2a2a2a;
-            box-shadow: 0 0 8px #111;
-            color: #ddd;
-            padding: 32px;
-        }
-
-        code {
-            display: flex;
-            align-items: center;
-        }
-
-        strong {
-            color: #777;
-        }
-
-        strong::before {
-            content: '> ';
-        }
     </style>
 </head>
 
 <body>
-    <main>
-        <section>
-            <code>
-            <pre>
-
-    <strong>Parent container </strong>
-    const tutorial = document.querySelector('.tutorial');
-
-    
-    <strong>Create label </strong>
-    const label = Label('elements-label-1', tutorial);
-
-
-    <strong>Manual positioning (optional) </strong>
-    label.element.style.marginTop = 0;
-    label.element.style.marginLeft = 48;
-
-
-    <strong>Create circle (gauge|knob) </strong>
-    const circle = Circle('elements-knob-1', tutorial);
-    
-
-    <strong>Bind label to circle </strong>
-    circle.subscribe(label);
-
-            </pre>
-        </code>
-        </section>
-
-        <div class="tutorial"></div>
-    </main>
+    <div class="tutorial"></div>
     <script src="src/elements.js"></script>
+    <script src="src/keyboard.js"></script>
     <script>
         
         const tutorial = document.querySelector('.tutorial');
 
+        const circle = Circle('elements-knob-3', tutorial);
         const label = Label('elements-label-1', tutorial);
-        
         label.element.style.marginTop = 0;
         label.element.style.marginLeft = 48;
-
-        const circle = Circle('elements-knob-3', tutorial);
-        
         circle.subscribe(label);
+        
+        const xypad = XYPad('elements-xypad-3', tutorial);
+        const label2 = Label('elements-label-2', tutorial);
+        label2.configure({ fontSize: 13 });
+        label2.element.style.marginLeft = 177;
+        label2.element.style.marginTop = 112;
+        label2.transformer = function (value) {
+            return value.x * 1000;
+        }
+        xypad.subscribe(label2);
 
+        const label3 = Label('elements-label-3', tutorial);
+        label3.configure({ fontSize: 13 });
+        label3.element.style.marginLeft = 337;
+        label3.element.style.marginTop = 112;
+        label3.transformer = function (value) {
+            return value.y * 1000;
+        }
+        xypad.subscribe(label3);
+
+
+        function D() {
+            this.update = function (data) {
+                console.log(data);
+                // k.heldKeys;
+            }
+        }
+        
+        const k = KeyBoard();
+        const d = new D();
+        k.subscribe(d);
+        
     </script>
 </body>
 
