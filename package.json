@@ -2,18 +2,20 @@
   "name": "synth",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "mocha test/**/*.test.js",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha test/**/*.test.js -x test/**/*.test.js",
     "doc": "node_modules/.bin/esdoc",
-    "build": "webpack"
+    "build": "webpack",
+    "electron": "electron ."
   },
   "author": "Juraj Onuska",
   "license": "ISC",
   "devDependencies": {
     "canvas-prebuilt": "^1.6.5-prerelease.1",
     "chai": "^4.1.2",
+    "electron": "^1.8.4",
     "esdoc": "^1.0.4",
     "esdoc-standard-plugin": "^1.0.0",
     "istanbul": "^1.1.0-alpha.1",

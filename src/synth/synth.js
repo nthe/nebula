@@ -54,18 +54,15 @@
             source.connect(gain);
         }
         
-        // (amp-compensation) amp * Math.max(0.15, 1 / voice.grains);
-        const amp = (1 - voice.amp);                 
         const length = voice.attack + voice.release;
         const offset = Math.max(0, voice.offset * voice.buffer.duration);
         const randomOffset = Math.abs((Math.random() * voice.spread) - (voice.spread / 2));
         
         source.start(context.currentTime, offset + randomOffset, length);
         gain.gain.setValueAtTime(0, context.currentTime);
-        gain.gain.linearRampToValueAtTime(amp, context.currentTime + voice.attack);
+        gain.gain.linearRampToValueAtTime(voice.amp, context.currentTime + voice.attack);
         gain.gain.linearRampToValueAtTime(0, context.currentTime + length);
         source.stop(context.currentTime + length);
-
         setTimeout(() => {
             voice.grains--;
             gain.disconnect();
@@ -119,7 +116,13 @@
          * @property
          * @description default release
          */
-        release: 1.5,
+        release: 0.75,
+
+        /**
+         * @property
+         * @description default decay
+         */
+        decay: 1.0,
 
         /**
          * @property
@@ -150,7 +153,7 @@
          * @description play current grain cloud
          */
         play: function () {
-            var that = this;
+            const that = this;
             this.release = Math.max(0.01, this.release);
             this.play = function () {
                 grain(that);
@@ -164,7 +167,20 @@
          * @description stop current grain cloud
          */
         stop: function () {
-            clearTimeout(this.timeout);
+            const that = this;
+            const decayInMS = that.decay * 1000;
+            const now = +new Date();
+            const init_amp = this.amp;
+            this.preDecay = function () {
+                that.amp = init_amp * (1 - (Number.parseFloat(+new Date() - now) / decayInMS));
+                if (that.amp > 0.0001) {
+                    setTimeout(that.preDecay, 0);
+                }
+                else {
+                    clearTimeout(that.timeout);
+                }
+            }
+            this.preDecay();
         }
     };
 
