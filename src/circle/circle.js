@@ -1,3 +1,4 @@
+const common = require('../common/common');
 "use strict";
 
 // default configuration of knob/gauge
@@ -195,46 +196,9 @@ Circle.prototype = {
         return this;
     },
 
-    /**
-     * @method subscribe
-     * @description register callback for subscription
-     * @param {function} callback callback method
-     * @returns {Slider} this
-     */
-    subscribe: function (callback) {
-        if (!this.subscribers.indexOf(callback) < 0) {
-            return;
-        }
-        callback.update(this.value);
-        this.subscribers.push(callback);
-        return this;
-    },
-
-    /**
-     * @method unsubscribe
-     * @description un-register callback from subscription
-     * @param {function} callback callback method
-     * @returns {Slider} this
-     */
-    unsubscribe: function (callback) {
-        let position = this.subscribers.indexOf(callback);
-        if (position < 0) {
-            return;
-        }
-        this.subscribers.splice(position, 1);
-        return this;
-    },
-
-    /**
-     * @method emit
-     * @description calls callbacks of subscribers
-     * @param {any} data data to publish
-     * @returns {any} data
-     */
-    emit: function (data) {
-        this.subscribers.map(f => f.update(data));
-        return data;
-    },
+    subscriber: common.events.subscribe,
+    unsubscribe: common.events.unsubscribe,
+    emit: common.events.emit,
 
     /**
      * @method deactivate
