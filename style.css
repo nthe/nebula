@@ -1,10 +1,45 @@
 body {
-    background-color: #424242;
-    /* background-color: #ddd; */
-    color: #ddd;
+    /* background-color: #222; */
+    /* background-color: #353535; */
+    background-color: #555;
+    /* color: #ddd; */
     font-size: 15px;
-    padding: 32px;
+    padding: 0;
     margin: 0;
+}
+
+#left-controls {
+    box-sizing: border-box;
+    position: absolute;
+    padding: 32px;
+    display: flex;
+    width: calc(10vw);
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#left-controls canvas {
+    margin: 16px 0;
+    /* float: */
+}
+
+#panel {
+    height: 100%;
+    width: calc(80vw);
+    /* background-color: #424242; */
+    background-color: #424242;
+    box-shadow: 0 0 16px #222;
+    padding: 32px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+#right-controls {
+    box-sizing: border-box;
+    position: absolute;
+    /* padding: 32px; */
 }
 
 canvas[id*='elements-knob'] {
@@ -20,6 +55,7 @@ span[id*='elements-'] {
 .tutorial {
     margin: 0 auto;
     /* width: 33%; */
+    margin-top: 220px;
     width: 100%;
 }
 

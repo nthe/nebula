@@ -14,7 +14,7 @@ const Scope    = require('./scope/scope');
 const Slider   = require('./slider/slider');
 const WaveForm = require('./waveform/waveform');
 const XYPad    = require('./xypad/xypad');
-const Utils    = require('./utils/utils');
+// const Utils    = require('./utils/utils');
 
 const lib = {
     Synth:          Synth,
@@ -26,11 +26,10 @@ const lib = {
         Slider:     Slider,
         WaveForm:   WaveForm,
         XYPad:      XYPad
-    },
-    Utils:          Utils
+    }
 };
 
 // console.log(lib);
 // window.ELM = lib;
-module.exports.ELM = lib;
+module.exports = lib;
 // export default lib;
