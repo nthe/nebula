@@ -2,21 +2,27 @@
   "name": "synth",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "mocha src/**/*.test.js",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha src/**/*.test.js -x src/**/*.test.js",
-    "doc": "node_modules/.bin/esdoc"
+    "test": "mocha test/**/*.test.js",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha test/**/*.test.js -x test/**/*.test.js",
+    "doc": "node_modules/.bin/esdoc",
+    "build": "webpack",
+    "electron": "electron ."
   },
   "author": "Juraj Onuska",
   "license": "ISC",
   "devDependencies": {
     "canvas-prebuilt": "^1.6.5-prerelease.1",
     "chai": "^4.1.2",
+    "electron": "^1.8.4",
     "esdoc": "^1.0.4",
     "esdoc-standard-plugin": "^1.0.0",
     "istanbul": "^1.1.0-alpha.1",
     "jsdom": "^11.6.2",
-    "mocha": "^5.0.4"
+    "mocha": "^5.0.4",
+    "uglify-js-es6": "^2.8.9",
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13"
   }
 }
