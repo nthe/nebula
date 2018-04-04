@@ -31,20 +31,20 @@ function grain(voice) {
         source.connect(gain);
     }
     
-    const length = voice.attack + voice.release;
+    const attack = voice.grainSkew === 1 ? voice.grainSize - 0.001 : voice.grainSize * voice.grainSkew;
     const offset = Math.max(0, voice.offset * voice.buffer.duration);
     const randomOffset = Math.abs((Math.random() * voice.spread) - (voice.spread / 2));
     
-    source.start(context.currentTime, offset + randomOffset, length);
+    source.start(context.currentTime, offset + randomOffset, voice.grainSize);
     gain.gain.setValueAtTime(0, context.currentTime);
-    gain.gain.linearRampToValueAtTime(voice.amp, context.currentTime + voice.attack);
-    gain.gain.linearRampToValueAtTime(0, context.currentTime + length);
-    source.stop(context.currentTime + length);
+    gain.gain.linearRampToValueAtTime(voice.amp, context.currentTime + attack);
+    gain.gain.linearRampToValueAtTime(0, context.currentTime + voice.grainSize);
+    source.stop(context.currentTime + voice.grainSize);
     setTimeout(() => {
         voice.grains--;
         gain.disconnect();
         if (doPan === 1) panner.disconnect();
-    }, length * 1001);
+    }, voice.grainSize * 1001);
 }
 
 /**
@@ -64,66 +64,28 @@ const Voice = (synth) => new Voice.init(synth);
  * @returns {Voice.init} self
  */
 Voice.init = function (synth) {
-    this.master = synth.master;
+    this.master = context.createGain();
+    // this.master.connect(synth.master);
+    this.master.connect(synth.filter);
+    this.master.gain.setValueAtTime(0.8, 0);
     this.context = synth.context,
     this.buffer = synth.buffer;
     this.grains = 0;
 }
 
 Voice.prototype = {
-    /**
-     * @property
-     * @description default offset
-     */
-    offset: 0,
+    
+    offset: 0,          // sample position
+    trans: 1,           // playback speed
+    attack: 0.2,        // sound attack
+    release: 0.75,      // sound release
+    amp: 0.8,           // amplitude
 
-    /**
-     * @property
-     * @description default pitch
-     */
-    trans: 1,
-
-    /**
-     * @property
-     * @description default attack
-     */
-    attack: 0.2,
-
-    /**
-     * @property
-     * @description default release
-     */
-    release: 0.75,
-
-    /**
-     * @property
-     * @description default decay
-     */
-    decay: 1.0,
-
-    /**
-     * @property
-     * @description default density
-     */
-    density: 50,
-
-    /**
-     * @property
-     * @description default spread
-     */
-    spread: 0.3,
-
-    /**
-     * @property
-     * @description default panning spread
-     */
-    pan: 1,
-
-    /**
-     * @property
-     * @description default master amplitude
-     */
-    amp: 0.25,
+    grainSize: 1,       // grain size (length)
+    grainSkew: 0.5,     // grain window skew
+    density: 50,        // grain density
+    spread: 0.3,        // grain spread
+    pan: 1,             // grain spatial position
 
     /**
      * @method play
@@ -137,6 +99,8 @@ Voice.prototype = {
             that.timeout = setTimeout(that.play, 100 - that.density);
         };
         this.play();
+        this.master.gain.setValueAtTime(0.0, this.context.currentTime);
+        this.master.gain.linearRampToValueAtTime(this.amp, this.context.currentTime + this.attack);
     },
 
     /**
@@ -145,19 +109,10 @@ Voice.prototype = {
      */
     stop: function () {
         const that = this;
-        const decayInMS = that.decay * 1000;
-        const now = +new Date();
-        const init_amp = this.amp;
-        this.preDecay = function () {
-            that.amp = init_amp * (1 - (Number.parseFloat(+new Date() - now) / decayInMS));
-            if (that.amp > 0.0001) {
-                setTimeout(that.preDecay, 0);
-            }
-            else {
-                clearTimeout(that.timeout);
-            }
-        }
-        this.preDecay();
+        this.master.gain.linearRampToValueAtTime(0.0, this.context.currentTime + this.release);
+        setTimeout(() => {
+            clearTimeout(that.timeout);
+        }, this.release * 1001);
     }
 };
 
@@ -183,13 +138,22 @@ Synth.init = function (context) {
     this.voices = {};
     this.buffer = null;
     this.context = context;
+    
+    this.filter = context.createBiquadFilter();
+    this.filter.type = "lowpass";
+    this.filter.frequency.value = 20000;
+    
     this.master = context.createGain();
+    this.filter.connect(this.master);
     this.master.connect(context.destination);
-    this.master.gain.setValueAtTime(0.8, 0);
+    this.master.gain.setValueAtTime(this.amp, 0);
     this.controls = Voice.prototype;
 }
 
 Synth.prototype = {
+
+    amp: 0.8,
+
     /**
      * @method update
      * @description update callback

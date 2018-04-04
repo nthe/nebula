@@ -10,7 +10,8 @@
     "browserify": "browserify .\\src\\index.js --standalone ELM -o .\\lib\\index.js",
     "minify": "node node_modules\\uglify-js-es6\\bin\\uglifyjs lib\\index.js --compress --mangle -o lib\\index.min.js",
     "build": "npm run browserify && npm run minify",
-    "app": "electron ."
+    "app": "electron .",
+    "all": "npm run build && npm run app"
   },
   "author": "Juraj Onuska",
   "license": "ISC",

@@ -196,7 +196,7 @@ Circle.prototype = {
         return this;
     },
 
-    subscriber: common.events.subscribe,
+    subscribe: common.events.subscribe,
     unsubscribe: common.events.unsubscribe,
     emit: common.events.emit,
 
