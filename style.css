@@ -1,10 +1,114 @@
+* {
+    /* border: 1px solid black;
+    box-sizing: border-box; */
+}
+
 body {
-    background-color: #424242;
-    /* background-color: #ddd; */
-    color: #ddd;
+    background-color: #333;
     font-size: 15px;
-    padding: 32px;
+    padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: row;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 17px;
+}
+
+h5 {
+    color: #aaa;
+}
+
+.status-bar {
+    position: fixed;
+    width: 100%;
+    height: 32px;
+    background-color: #222;
+    bottom: 0;
+    z-index: 1;
+    box-shadow: 0 0 8px #111;
+    -webkit-app-region: drag;
+}
+
+.system-bar {
+    position: fixed;
+    width: 100%;
+    height: 32px;
+    background-color: #222;
+    top: 0;
+    z-index: 3;
+    box-shadow: 0 0 8px #111;
+    -webkit-app-region: drag;
+}
+
+.samples {
+    position: fixed;
+    width: 275px;
+    height: 100%;
+    background-color: #2a2a2a;
+    right: 0;
+    z-index: 1;
+    box-shadow: 0 0 8px #111;
+}
+
+.samples ul {
+    list-style: none;
+    margin-top: 64px;
+    font-size: 13px;
+    line-height: 24px;
+}
+
+.samples ul li {
+    color: #424242;
+    transition: 350ms color ease;
+}
+
+.samples ul li:hover {
+    color: #ddd;
+    cursor: pointer;
+}
+
+li.active {
+    color: #fc1;
+}
+
+.centered-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.control-panel {
+    margin-top: -24px;
+    box-sizing: border-box;
+    background-color: #2a2a2a;
+    margin-left: 24px;
+    z-index: 2;
+    box-shadow: 0 0 8px #111;
+    width: 120px;
+    display: flex;
+    color: white;
+}
+
+.control-panel canvas {
+    margin: 16px 0;
+    /* float: */
+}
+
+.amp-envelope {
+    width: 160px;
+}
+
+#panel {
+    height: 100%;
+    flex-grow: 1;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+#right-controls {
+    box-sizing: border-box;
+    flex-grow: 1;
 }
 
 canvas[id*='elements-knob'] {
@@ -17,11 +121,6 @@ span[id*='elements-'] {
     vertical-align: middle;
 }
 
-.tutorial {
-    margin: 0 auto;
-    /* width: 33%; */
-    width: 100%;
-}
 
 canvas[id*='elements-waveform-'] {
     width: 500px;

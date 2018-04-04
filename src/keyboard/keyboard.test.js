@@ -1,21 +1,20 @@
-const KeyBoardMock = require('Wkeyboard').KeyBoardMock;
+// const KeyBoardMock = require('./keyboard').KeyBoardMock;
 const expect = require('chai').expect;
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const log = console.log;
 
 describe("KeyBoard", () => {
-
     // mock browser
     const window = new JSDOM(
         `<html lang="en"><head></head><body></body></html>`
     ).window;
-
-    // pass mocked window object for registration / export
-    KeyBoardMock(window);
-
+    // set mocked window object
+    global.window = window;
+    // load keyboard module
+    var KeyBoard = require('./keyboard');
     // create test instance
-    const keyboard = window.KeyBoard();
+    const keyboard = KeyBoard();
 
     function Client() {
         this.data = null;

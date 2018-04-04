@@ -39,3 +39,11 @@ const map = (num, in_min, in_max, out_min, out_max) => {
  * @returns {number} angle in radians
  */
 const toRadians = (degrees) => degrees * (Math.PI / 180);
+
+
+module.exports = { 
+    limitTo,
+    random,
+    map,
+    toRadians
+};

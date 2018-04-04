@@ -9,16 +9,27 @@
 </head>
 
 <body>
-    <div class="tutorial"></div>
-    
-    <script src="src/synth/synth.js"></script>
-    <script src="src/keyboard/keyboard.js"></script>
-    <script src="src/xypad/xypad.js"></script>
-    <script src="src/waveform/waveform.js"></script>
-    <script src="src/slider/slider.js"></script>
-    <script src="src/circle/circle.js"></script>
-    <script src="src/label/label.js"></script>
-    <script src="src/scope/scope.js"></script>
+
+    <section class="system-bar"></section>
+    <section class="centered-content control-panel filter-controls">
+        <h5>filter</h5>
+    </section>
+    <section class="centered-content control-panel amp-envelope">
+        <h5>envelope</h5>
+    </section>
+    <section class="centered-content control-panel convolver">
+        <h5>convolver</h5>
+    </section>
+    <section class="centered-content" id="panel"></section>
+    <section class="centered-content" id="right-controls" ></section>
+    <section class="status-bar"></section>
+
+    <section class="samples">
+        <ul class="samples-list">
+        </ul>
+    </section>
+
+    <script src="lib/index.min.js"></script>
     <script src="src/main.js"></script>
     
 </body>
