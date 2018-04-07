@@ -1,4 +1,5 @@
 const common = require('../common/common');
+const utils = require('../utils/utils');
 "use strict";
 
 // default configuration of knob/gauge
@@ -172,10 +173,29 @@ Circle.prototype = {
 
         window.onmousemove = (e) => {
             e.preventDefault();
+            // const rect = this.element.getBoundingClientRect();
+            // const center = {
+            //     x: rect.left + (rect.width / 2),
+            //     y: rect.top + (rect.height / 2)
+            // };
+            
+            // const firstLeg = {
+            //     x: center.x + 1,
+            //     y: center.y
+            // };
+
+            // const secondLeg = {
+            //     x: e.clientX,
+            //     y: e.clientY
+            // };
+
+            // const deg = utils.angle(center, firstLeg, secondLeg); 
+            // console.log(center, firstLeg, secondLeg, deg);
+
             if (e.clientY > initY) {
-                this.value -= 0.03;
+                this.value -= 0.025;
             } else {
-                this.value += 0.03;
+                this.value += 0.025;
             }
             initY = e.clientY;
             this.value = this.value >= 1 ? 1 : this.value;

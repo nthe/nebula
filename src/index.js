@@ -1,11 +1,3 @@
-/**
- * Grranular synthesizer. 
- * 
- * @description Granular synthesizer.
- * @author Juraj Onuska
- * @e-mail: jurajonuska@gmail.com
- */
-
 const Synth    = require('./synth/synth');
 const KeyBoard = require('./keyboard/keyboard');
 const Circle   = require('./circle/circle');
@@ -14,9 +6,8 @@ const Scope    = require('./scope/scope');
 const Slider   = require('./slider/slider');
 const WaveForm = require('./waveform/waveform');
 const XYPad    = require('./xypad/xypad');
-// const Utils    = require('./utils/utils');
 
-const lib = {
+module.exports = {
     Synth:          Synth,
     KeyBoard:       KeyBoard,
     GUI: {
@@ -28,8 +19,3 @@ const lib = {
         XYPad:      XYPad
     }
 };
-
-// console.log(lib);
-// window.ELM = lib;
-module.exports = lib;
-// export default lib;

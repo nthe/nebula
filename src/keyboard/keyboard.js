@@ -128,17 +128,18 @@ KeyBoard.prototype = {
      * @param {Event} event keyboard event
      */
     keyHandler: function (event) {
-        const note = keyToNoteMap[event.key];
-        const command = keyToCommandsMap[event.key];
+        const key = event.key.toLowerCase();
+        const note = keyToNoteMap[key];
+        const command = keyToCommandsMap[key];
         
         if (event.type === 'keydown') {
             // check if note should be (re)triggered
-            const doTrigger = !this.heldKeys.hasOwnProperty(event.key) || this.holdMode;
+            const doTrigger = !this.heldKeys.hasOwnProperty(key) || this.holdMode;
             
             // handle note key
             if (note && doTrigger) {
                 const voice = this.activeVoices++;
-                this.heldKeys[event.key] = voice;
+                this.heldKeys[key] = voice;
                 const msg = Object.assign({}, note, {voice: voice, freq: this.noteToFreq(note), state: 'on' });
                 this.emit(msg);
             }
@@ -175,9 +176,9 @@ KeyBoard.prototype = {
         }
         if (event.type === 'keyup') {
             // check if key was held and hold-mode is off
-            const heldKey = this.heldKeys[event.key];
+            const heldKey = this.heldKeys[key];
             if (typeof heldKey !== 'undefined' && !this.holdMode) {
-                delete this.heldKeys[event.key];
+                delete this.heldKeys[key];
                 const msg = Object.assign({}, note, {voice: heldKey, freq: this.noteToFreq(note), state: 'off' });
                 this.emit(msg);
                 

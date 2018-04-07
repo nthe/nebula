@@ -16,7 +16,7 @@ const convolver = document.querySelector('.convolver');
 const samples_list = document.querySelector('.samples-list');
 
 // pre-populate samples
-for (let sample of ['chair-1', 'chair-2', 'chair-3', 'doors-1', 'glasses-1', 'gun-reload', 'metal-can-1', 'metallic-1']) {
+for (let sample of ['chair-1', 'chair-2', 'chair-3', 'doors-1', 'glasses-1', 'gun-reload', 'metal-can-1', 'metallic-1', 'sample2']) {
     const li = document.createElement('li');
     li.innerHTML = sample;
     samples_list.appendChild(li);
@@ -27,8 +27,10 @@ samples_list.addEventListener('click', (event) => {
     const sample = `audio/${event.target.innerHTML}.wav`;
     for (let el of samples_list.children) {
         el.style.color = "#424242";
+        el.style.backgroundColor = "transparent";
     }
-    event.target.style.color = "#fc1";
+    event.target.style.backgroundColor = "#252525";
+    event.target.style.color = "#aaa";
     wave.load(sample, function (buffer) {
         synth.buffer = buffer;
     });
@@ -44,6 +46,9 @@ const synth = ELM.Synth(context);
 // create virtual keyboard
 ELM.KeyBoard().subscribe(synth);
 
+const scope = ELM.GUI.Scope('elements-scope', pads);
+scope.init(context).connect(synth.master).run();
+
 // create waveform window
 const wave = ELM.GUI.WaveForm('elements-waveform-1', pads);
 
@@ -52,38 +57,53 @@ const wave = ELM.GUI.WaveForm('elements-waveform-1', pads);
  */
 
 ELM.GUI.Circle('knob-grain-size', envelopes)
-    .configure({radius: 120, lineWidth: 16, rangeColor: '#1cf', backdropColor: '#424242'})
+    .configure({radius: 120, lineWidth: 16, value: 0.5, rangeColor: '#fff', backdropColor: '#424242'})
     .subscribe({ update: (data) => synth.controls.grainSize = data });
 
 ELM.GUI.Circle('knob-grain-skew', envelopes)
-    .configure({radius: 52, lineWidth: 4, value: 0.25, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false})
+    .configure({radius: 52, lineWidth: 4, value: 0.25, rangeColor: '#fff', backdropColor: '#424242', showHandle: false})
     .subscribe({ update: (data) => synth.controls.grainSkew = data });
 
 ELM.GUI.Circle('knob-voice-attack', envelopes)
-    .configure({radius: 72, lineWidth: 8, value: 0.15, rangeColor: '#1cf', backdropColor: '#424242'})
+    .configure({radius: 72, lineWidth: 8, value: 0.15, rangeColor: '#fff', backdropColor: '#424242'})
     .subscribe({ update: (data) => synth.controls.attack = data });
 
 ELM.GUI.Circle('knob-voice-release', envelopes)
-    .configure({radius: 72, lineWidth: 8, value: 0.33, rangeColor: '#1cf', backdropColor: '#424242'})
-    .subscribe({ update: (data) => synth.controls.release = data });
+    .configure({radius: 72, lineWidth: 8, value: 0.2, rangeColor: '#fff', backdropColor: '#424242'})
+    .subscribe({ update: (data) => synth.controls.release = Math.pow(data, 2) * 10 });
 
 /**
  *      [=== FILTER ===]
  */
     
 ELM.GUI.Circle('knob-filter-q', filter)
-    .configure({radius: 52, lineWidth: 4, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false});
+    .configure({radius: 52, lineWidth: 4, value: 0.1, rangeColor: '#1f7', backdropColor: '#424242', showHandle: false})
+    .subscribe({ update: (data) => synth.Q = data * 30 });
 
 ELM.GUI.Circle('knob-filter-cutoff', filter)
-    .configure({radius: 92, lineWidth: 14, rangeColor: '#1cf', backdropColor: '#424242'});
+    .configure({radius: 92, lineWidth: 14, value: 1, rangeColor: '#1f7', backdropColor: '#424242'})
+    .subscribe({ update: (data) => synth.cutoff = Math.pow(data, 2) * 20000
+    });
 
 ELM.GUI.Circle('knob-filter-gain', filter)
-    .configure({radius: 52, lineWidth: 4, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false});
+    .configure({radius: 52, lineWidth: 4, value: 0, rangeColor: '#1f7', backdropColor: '#424242', showHandle: false})
+    .subscribe({ update: (data) => synth.gain = data * 10 });
 
+const filterType = window.document.createElement('p');
+let selectedFilterIndex = 0;
+filterType.onclick = () => {
+    selectedFilterIndex = (selectedFilterIndex + 1) % synth.filterTypes.length;
+    synth.filterType = synth.filterTypes[selectedFilterIndex];
+    filterType.innerHTML = synth.filterTypes[selectedFilterIndex];
+};
+
+filterType.classList.add('filterType');
+filterType.innerHTML = 'lowpass';
+filter.appendChild(filterType);
 /**
  *      [=== CONVOLVER ===]
  */
-
+ 
 ELM.GUI.Circle('knob-noise-blend', convolver)
     .configure({radius: 92, lineWidth: 14, rangeColor: '#1cf', backdropColor: '#424242'});
 
@@ -118,11 +138,78 @@ const xypad2 = ELM.GUI.XYPad('elements-xypad-4', pads)
 
 xypad2.element.style.marginLeft = 8;
 
-// const scope = Scope('elements-scope', pads);
-
-// scope.init(context).connect(synth.master);
-
 wave.load('audio/gun-reload.wav', function (buffer) {
     synth.buffer = buffer;
-    samples_list.children[5].style.color = "#fc1";
+    samples_list.children[5].style.color = "#aaa";
+    samples_list.children[5].style.backgroundColor = "#252525";
 });
+
+
+const record = document.querySelector('.record-button');
+const close = document.querySelector('.close');
+const minimize = document.querySelector('.minimize');
+
+close.onclick = (event) => this.window.close();
+// minimize.onclick = (event) => this.window.minimize();
+
+
+const dest = context.createMediaStreamDestination();
+const mediaRecorder = new MediaRecorder(dest.stream);
+synth.master.connect(dest);
+dest.connect(context.destination);
+
+let recording = false;
+record.onclick = function() {
+    if (!recording) {
+        mediaRecorder.start();
+        record.src = "icons/media-stop.svg";
+    } 
+    else {
+        mediaRecorder.stop();
+        record.src = "icons/media-record.svg";
+    }
+    recording = !recording;
+};
+
+const chunks = [];
+
+mediaRecorder.ondataavailable = (e) => {
+    chunks.push(e.data);
+}
+
+mediaRecorder.onstop = function(e) {
+    // let fileReader = new FileReader();
+    // // fileReader.read
+    // fileReader.onload = function() {
+
+    //     var incomingData = new Uint8Array(this.result);
+    //     var i, l = incomingData.length;
+    //     var buffer = new Float32Array(incomingData.length);
+    //     for (i = 0; i < l; i++) {
+    //         buffer[i] = (incomingData[i] - 128) / 128.0;
+    //     }
+
+    //     const encoder = new WavAudioEncoder(22000, 1);
+    //     var buffers = [];
+    //     buffers.push(buffer);
+    //     encoder.encode(buffers);
+    //     const blob = encoder.finish();
+    //     console.log(blob);
+    //     encoder.cancel();
+    //     // fileReader.readAsArrayBuffer(chunks[0]);
+    // // var blob = new Blob(chunks, { 'type' : 'audio/wav; codecs=opus' });
+    //     var audioURL = window.URL.createObjectURL(blob);
+    //     var anchor = document.createElement('a');
+    //     anchor.href = audioURL;
+    //     anchor.download = `nubula-audio-recording.wav`;
+    //     anchor.click();
+        
+    // };
+    // fileReader.readAsArrayBuffer(chunks[0]);
+    var blob = new Blob(chunks, { 'type' : 'audio/webm; codecs=opus' });
+    var audioURL = window.URL.createObjectURL(blob);
+    var anchor = document.createElement('a');
+    anchor.href = audioURL;
+    anchor.download = `nubula-audio-recording.webm`;
+    anchor.click();
+}

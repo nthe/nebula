@@ -1,8 +1,3 @@
-* {
-    /* border: 1px solid black;
-    box-sizing: border-box; */
-}
-
 body {
     background-color: #333;
     font-size: 15px;
@@ -12,10 +7,31 @@ body {
     flex-direction: row;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 17px;
+    user-select: none;
 }
 
 h5 {
     color: #aaa;
+}
+
+.filterType {
+    color: #aaa;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.filterType::before {
+    content: '( ';
+    color: #555;
+    position: relative;
+    top: -1px;
+}
+
+.filterType::after {
+    content: ' )';
+    color: #555;
+    position: relative;
+    top: -1px;
 }
 
 .status-bar {
@@ -26,18 +42,60 @@ h5 {
     bottom: 0;
     z-index: 1;
     box-shadow: 0 0 8px #111;
-    -webkit-app-region: drag;
+    /* -webkit-app-region: drag; */
+}
+
+#elements-scope {
+    border-top: 1px solid #777;
+    position: absolute;
+    top: 64px;
 }
 
 .system-bar {
     position: fixed;
     width: 100%;
-    height: 32px;
+    height: 52px;
     background-color: #222;
     top: 0;
     z-index: 3;
     box-shadow: 0 0 8px #111;
     -webkit-app-region: drag;
+}
+
+.system-bar img {
+    filter: invert(0.4);
+    cursor: pointer;
+    height: 18px;
+    margin: 20px 10px;
+    -webkit-app-region: no-drag;
+}
+
+.system-bar img:hover {
+    filter: invert(1);
+}
+
+.system-bar img.record-button {
+    height: 26px;
+    margin: 16px 13px;
+    position: absolute;
+    z-index: 3;
+}
+
+.record-button-bg {
+    width: 200px;
+    height: 32px;
+    background: #333;
+    display: inline-block;
+    padding: 0;
+    margin: 13px 10px;
+    border-radius: 16px;
+    top: 0;
+    position: absolute;
+    color: #ccc;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 32px;
+    font-size: 13px;
 }
 
 .samples {
@@ -52,7 +110,8 @@ h5 {
 
 .samples ul {
     list-style: none;
-    margin-top: 64px;
+    margin-top: 72px;
+    padding-left: 0;
     font-size: 13px;
     line-height: 24px;
 }
@@ -60,15 +119,17 @@ h5 {
 .samples ul li {
     color: #424242;
     transition: 350ms color ease;
+    padding: 4px 24px;
 }
 
 .samples ul li:hover {
-    color: #ddd;
+    color: #fff;
     cursor: pointer;
 }
 
 li.active {
     color: #fc1;
+    background-color: #242424;
 }
 
 .centered-content {
@@ -101,8 +162,8 @@ li.active {
 
 #panel {
     height: 100%;
-    flex-grow: 1;
-    margin: 0 auto;
+    /* flex-grow: 1; */
+    margin: auto 32px;
     box-sizing: border-box;
 }
 

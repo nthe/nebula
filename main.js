@@ -4,10 +4,13 @@ const url = require('url');
 
 app.on('ready', function () {
     const win = new BrowserWindow({ 
-        width: 1500,
-        height: 700,
+        width: 1350,
+        height: 775,
         frame: false,
-        transparent: false
+        fullscreen: false,
+        transparent: false,
+        fullscreenable: false,
+        titleBarStyle: 'hidden'
     });
     win.setMenu(null);
     win.setResizable(false);

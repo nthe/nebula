@@ -40,10 +40,25 @@ const map = (num, in_min, in_max, out_min, out_max) => {
  */
 const toRadians = (degrees) => degrees * (Math.PI / 180);
 
+/**
+ * @function angle
+ * @description calculate angle (in degrees) between three points
+ * @param {object} p1 coordinates of center points
+ * @param {object} p2 coordinates of leg point
+ * @param {object} p3 coordinates of leg point
+ * @returns {number} angle
+ */
+const angle = function (p1, p2, p3) {
+    const p12 = Math.sqrt(Math.pow((p1.x - p2.x),2) + Math.pow((p1.y - p2.y),2));
+    const p13 = Math.sqrt(Math.pow((p1.x - p3.x),2) + Math.pow((p1.y - p3.y),2));
+    const p23 = Math.sqrt(Math.pow((p2.x - p3.x),2) + Math.pow((p2.y - p3.y),2));
+    return Math.acos(((Math.pow(p12, 2)) + (Math.pow(p13, 2)) - (Math.pow(p23, 2))) / (2 * p12 * p13)) * 180 / Math.PI;
+}; 
 
 module.exports = { 
     limitTo,
     random,
     map,
-    toRadians
+    toRadians,
+    angle
 };

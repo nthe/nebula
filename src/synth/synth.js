@@ -67,7 +67,7 @@ Voice.init = function (synth) {
     this.master = context.createGain();
     // this.master.connect(synth.master);
     this.master.connect(synth.filter);
-    this.master.gain.setValueAtTime(0.8, 0);
+    this.master.gain.setValueAtTime(0.95, 0);
     this.context = synth.context,
     this.buffer = synth.buffer;
     this.grains = 0;
@@ -79,7 +79,7 @@ Voice.prototype = {
     trans: 1,           // playback speed
     attack: 0.2,        // sound attack
     release: 0.75,      // sound release
-    amp: 0.8,           // amplitude
+    amp: 0.95,          // amplitude
 
     grainSize: 1,       // grain size (length)
     grainSkew: 0.5,     // grain window skew
@@ -141,18 +141,51 @@ Synth.init = function (context) {
     
     this.filter = context.createBiquadFilter();
     this.filter.type = "lowpass";
-    this.filter.frequency.value = 20000;
+    this.filter.frequency.setValueAtTime(20000, this.context.currentTime);
+    this.filter.Q.setValueAtTime(0, this.context.currentTime);
+    this.filter.gain.setValueAtTime(0, this.context.currentTime);
     
+    this._amp = 0.95;
     this.master = context.createGain();
     this.filter.connect(this.master);
     this.master.connect(context.destination);
-    this.master.gain.setValueAtTime(this.amp, 0);
+    this.master.gain.setValueAtTime(this._amp, 0);
     this.controls = Voice.prototype;
 }
 
 Synth.prototype = {
 
-    amp: 0.8,
+    filterTypes: [
+        'lowpass',      // pass thru frequencies below cutoff
+        'highpass',     // pass thru frequencies above cutoff
+        'bandpass',     // pass thru frequencies around cutoff (width defined by Q)
+        'lowshelf',     // boost or attenuate frequencies below cutoff (based on gain)
+        'highshelf',    // boost or attenuate frequencies above cutoff (based on gain)
+        'peaking',      // boost or attenuate frequencies around cutoff (based on gain)
+        'notch',        // cut frequencies around cutoff (based on gain)
+        'allpass'       // pass everything but invert phase at cutoff
+    ],
+
+    set amp (value) {
+        this._amp = value;
+        this.master.gain.setValueAtTime(this._amp, 0.0);
+    },
+
+    set cutoff (value) {
+        this.filter.frequency.setValueAtTime(value, this.context.currentTime);
+    },
+
+    set Q (value) {
+        this.filter.Q.setValueAtTime(value, this.context.currentTime);
+    },
+
+    set gain (value) {
+        this.filter.gain.setValueAtTime(value, this.context.currentTime);
+    },
+
+    set filterType (value) {
+        this.filter.type = value;
+    },
 
     /**
      * @method update
