@@ -15,10 +15,11 @@ const filter = document.querySelector('.filter-controls');
 const convolver = document.querySelector('.convolver');
 const master = document.querySelector('.master');
 const samples_list = document.querySelector('.samples-list');
+const ir_samples_list = document.querySelector('.ir-samples-list');
 const system_bar = document.querySelector('.system-bar');
 
 // pre-populate samples
-for (let sample of ['chair-1', 'chair-2', 'chair-3', 'doors-1', 'glasses-1', 'gun-reload', 'metal-can-1', 'metallic-1', 'sample2']) {
+for (let sample of ['chair-1', 'chair-2', 'chair-3', 'doors-1', 'glasses-1', 'gun-reload', 'metal-can-1', 'metallic-1', 'foley']) {
     const li = document.createElement('li');
     li.innerHTML = sample;
     samples_list.appendChild(li);
@@ -36,10 +37,31 @@ samples_list.addEventListener('click', (event) => {
     wave.load(sample, function (buffer) {
         synth.buffer = buffer;
     });
-    wave.load(sample, function (buffer) {
-        synth.buffer = buffer;
+});
+
+
+// pre-populate samples
+for (let sample of ['brickworks', 'car-park', 'centre_stalls', 'dome', 'grange-centre', 'koli-snow-site', 'mh3-1', 'mh3-2', 'pommelte', 'pozzella', 'warehouse']) {
+    const li = document.createElement('li');
+    li.innerHTML = sample;
+    ir_samples_list.appendChild(li);
+}
+
+// attach listener to sample click
+ir_samples_list.addEventListener('click', (event) => {
+    const sample = `IRs/${event.target.innerHTML}.wav`;
+    for (let el of ir_samples_list.children) {
+        el.style.color = "#424242";
+        el.style.backgroundColor = "transparent";
+    }
+    event.target.style.backgroundColor = "#252525";
+    event.target.style.color = "#aaa";
+    wave_IR.load(sample, function (buffer) {
+        synth.convolver.buffer = buffer;
     });
 });
+
+
 
 
 // create synth
@@ -63,36 +85,37 @@ const wave_IR = ELM.GUI.WaveForm('elements-waveform-2', pads);
  */
 
 ELM.GUI.Circle('knob-grain-size', envelopes)
-    .configure({radius: 120, lineWidth: 16, value: 0.5, rangeColor: '#fff', backdropColor: '#424242'})
+    .configure({ radius: 120, lineWidth: 16, value: 0.5, rangeColor: '#fff', backdropColor: '#424242' })
     .subscribe({ update: (data) => synth.controls.grainSize = data });
 
 ELM.GUI.Circle('knob-grain-skew', envelopes)
-    .configure({radius: 52, lineWidth: 4, sweepAngle: 180, value: 0.25, rangeColor: '#fff', backdropColor: '#424242', showHandle: false})
+    .configure({ radius: 52, lineWidth: 4, sweepAngle: 180, value: 0.25, rangeColor: '#fff', backdropColor: '#424242', showHandle: false })
     .subscribe({ update: (data) => synth.controls.grainSkew = data });
 
 ELM.GUI.Circle('knob-voice-attack', envelopes)
-    .configure({radius: 72, lineWidth: 8, value: 0.15, rangeColor: '#fff', backdropColor: '#424242'})
+    .configure({ radius: 72, lineWidth: 8, value: 0.15, rangeColor: '#fff', backdropColor: '#424242' })
     .subscribe({ update: (data) => synth.controls.attack = data });
 
 ELM.GUI.Circle('knob-voice-release', envelopes)
-    .configure({radius: 72, lineWidth: 8, value: 0.2, rangeColor: '#fff', backdropColor: '#424242'})
+    .configure({ radius: 72, lineWidth: 8, value: 0.2, rangeColor: '#fff', backdropColor: '#424242' })
     .subscribe({ update: (data) => synth.controls.release = Math.pow(data, 2) * 10 });
 
 /**
  *      [=== FILTER ===]
  */
-    
+
 ELM.GUI.Circle('knob-filter-q', filter)
-    .configure({radius: 52, lineWidth: 4, value: 0.1, rangeColor: '#1f7', backdropColor: '#424242', showHandle: false})
+    .configure({ radius: 52, lineWidth: 4, value: 0.1, rangeColor: '#1f7', backdropColor: '#424242', showHandle: false })
     .subscribe({ update: (data) => synth.Q = data * 30 });
 
 ELM.GUI.Circle('knob-filter-cutoff', filter)
-    .configure({radius: 92, lineWidth: 14, value: 1, rangeColor: '#1f7', backdropColor: '#424242'})
-    .subscribe({ update: (data) => synth.cutoff = Math.pow(data, 2) * 20000
+    .configure({ radius: 92, lineWidth: 14, value: 1, rangeColor: '#1f7', backdropColor: '#424242' })
+    .subscribe({
+        update: (data) => synth.cutoff = Math.pow(data, 2) * 20000
     });
 
 ELM.GUI.Circle('knob-filter-gain', filter)
-    .configure({radius: 52, lineWidth: 4, value: 0, rangeColor: '#1f7', backdropColor: '#424242', showHandle: false})
+    .configure({ radius: 52, lineWidth: 4, value: 0, rangeColor: '#1f7', backdropColor: '#424242', showHandle: false })
     .subscribe({ update: (data) => synth.gain = data * 10 });
 
 const filterType = window.document.createElement('p');
@@ -110,15 +133,11 @@ filter.appendChild(filterType);
 /**
  *      [=== CONVOLVER ===]
  */
- 
+
 ELM.GUI.Circle('knob-convolver-blend', convolver)
-    .configure({radius: 92, lineWidth: 8, rangeColor: '#1cf', backdropColor: '#424242'})
-    .subscribe({ update: (data) => {
-        synth.convolverGain.gain.setValueAtTime(data, context.currentTime);
-        console.log(data);
-        console.log(synth.convolverGain.gain.value);
-    
-    }});
+    .configure({ radius: 92, lineWidth: 8, rangeColor: '#1cf', backdropColor: '#424242' })
+    .subscribe({
+        update: (data) => synth.convolverGain.gain.setValueAtTime(data, context.currentTime) });
 
 // ELM.GUI.Circle('knob-convolver-blend', convolver)
 //     .configure({radius: 52, lineWidth: 4, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false});
@@ -131,11 +150,11 @@ ELM.GUI.Circle('knob-convolver-blend', convolver)
  */
 
 ELM.GUI.Circle('knob-master-pan', master)
-    .configure({radius: 52, value: 0.75, sweepAngle: 180, lineWidth: 4, rangeColor: '#f55', backdropColor: '#424242', showHandle: false })
+    .configure({ radius: 52, value: 0.75, sweepAngle: 180, lineWidth: 4, rangeColor: '#f55', backdropColor: '#424242', showHandle: false })
     .subscribe({ update: (data) => synth.controls.pan = data });
 
 ELM.GUI.Circle('knob-master-amp', master)
-    .configure({radius: 92, value: 0.95, lineWidth: 8, rangeColor: '#f55', backdropColor: '#424242'})
+    .configure({ radius: 92, value: 0.95, lineWidth: 8, rangeColor: '#f55', backdropColor: '#424242' })
     .subscribe({ update: (data) => synth.amp = data });
 
 
@@ -168,7 +187,7 @@ wave.load('audio/gun-reload.wav', function (buffer) {
     samples_list.children[5].style.backgroundColor = "#252525";
 });
 
-wave.load('IRs/carpark_balloon.wav', function (buffer) {
+wave_IR.load('IRs/warehouse.wav', function (buffer) {
     synth.convolver.buffer = buffer;
 });
 
@@ -187,11 +206,11 @@ synth.master.connect(dest);
 dest.connect(context.destination);
 
 let recording = false;
-record.onclick = function() {
+record.onclick = function () {
     if (!recording) {
         mediaRecorder.start();
         record.src = "icons/media-stop.svg";
-    } 
+    }
     else {
         mediaRecorder.stop();
         record.src = "icons/media-record.svg";
@@ -205,7 +224,7 @@ mediaRecorder.ondataavailable = (e) => {
     chunks.push(e.data);
 }
 
-mediaRecorder.onstop = function(e) {
+mediaRecorder.onstop = function (e) {
     // let fileReader = new FileReader();
     // // fileReader.read
     // fileReader.onload = function() {
@@ -231,10 +250,10 @@ mediaRecorder.onstop = function(e) {
     //     anchor.href = audioURL;
     //     anchor.download = `nubula-audio-recording.wav`;
     //     anchor.click();
-        
+
     // };
     // fileReader.readAsArrayBuffer(chunks[0]);
-    var blob = new Blob(chunks, { 'type' : 'audio/webm; codecs=opus' });
+    var blob = new Blob(chunks, { 'type': 'audio/webm; codecs=opus' });
     var audioURL = window.URL.createObjectURL(blob);
     var anchor = document.createElement('a');
     anchor.href = audioURL;

@@ -14,6 +14,12 @@ WaveForm.init = function (id, parent) {
     this.element = window.document.createElement('div');
     this.backdrop = window.document.createElement('canvas');
     this.front = window.document.createElement('canvas');
+    this.element.style.width = "500px";
+    this.element.style.height = "125px";
+    this.backdrop.getContext('2d').canvas.width = 500;
+    this.backdrop.getContext('2d').canvas.height = 125;
+    this.front.getContext('2d').canvas.width = 500;
+    this.front.getContext('2d').canvas.height = 125;
 
     this.backdrop.style.position = 'absolute';
     this.backdrop.style.margin = '0';

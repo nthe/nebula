@@ -67,7 +67,7 @@ Voice.init = function (synth) {
     this.master = context.createGain();
     // this.master.connect(synth.master);
     this.master.connect(synth.filter);
-    this.master.connect(synth.convolver);
+    this.master.connect(synth.convolverGain);
     this.master.gain.setValueAtTime(0.95, 0);
     this.context = synth.context,
     this.buffer = synth.buffer;
