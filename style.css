@@ -11,7 +11,7 @@ body {
 }
 
 h5 {
-    color: #aaa;
+    color: #3a3a3a;
 }
 
 .filterType {
@@ -46,9 +46,9 @@ h5 {
 }
 
 #elements-scope {
-    border-top: 1px solid #777;
+    /* border-top: 1px solid #777; */
     position: absolute;
-    top: 64px;
+    top: 72px;
 }
 
 .system-bar {
@@ -201,4 +201,25 @@ canvas[id*='elements-scope-'] {
     box-shadow: inset 0 0 16px #222;
     box-sizing: border-box;
     border-radius: 8px;
+}
+
+.convolver {
+    flex-grow: 1;
+    margin-top: 0;
+    padding-bottom: 16px;
+    justify-content: flex-end;
+}
+
+.master {
+    flex-grow: 1;
+    margin-top: 24px;
+    justify-content: flex-start;
+}
+
+#elements-scope {
+    border-top: 1px solid #444;
+}
+
+#elements-waveform-2 {
+    display: none;
 }

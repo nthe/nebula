@@ -13,7 +13,9 @@ const pads = document.querySelector('#panel');
 const envelopes = document.querySelector('.amp-envelope');
 const filter = document.querySelector('.filter-controls');
 const convolver = document.querySelector('.convolver');
+const master = document.querySelector('.master');
 const samples_list = document.querySelector('.samples-list');
+const system_bar = document.querySelector('.system-bar');
 
 // pre-populate samples
 for (let sample of ['chair-1', 'chair-2', 'chair-3', 'doors-1', 'glasses-1', 'gun-reload', 'metal-can-1', 'metallic-1', 'sample2']) {
@@ -49,8 +51,12 @@ ELM.KeyBoard().subscribe(synth);
 const scope = ELM.GUI.Scope('elements-scope', pads);
 scope.init(context).connect(synth.master).run();
 
+// ELM.GUI.Slider('slider', system_bar);
+
 // create waveform window
 const wave = ELM.GUI.WaveForm('elements-waveform-1', pads);
+
+const wave_IR = ELM.GUI.WaveForm('elements-waveform-2', pads);
 
 /**
  *      [=== ENVELOPES ===]
@@ -61,7 +67,7 @@ ELM.GUI.Circle('knob-grain-size', envelopes)
     .subscribe({ update: (data) => synth.controls.grainSize = data });
 
 ELM.GUI.Circle('knob-grain-skew', envelopes)
-    .configure({radius: 52, lineWidth: 4, value: 0.25, rangeColor: '#fff', backdropColor: '#424242', showHandle: false})
+    .configure({radius: 52, lineWidth: 4, sweepAngle: 180, value: 0.25, rangeColor: '#fff', backdropColor: '#424242', showHandle: false})
     .subscribe({ update: (data) => synth.controls.grainSkew = data });
 
 ELM.GUI.Circle('knob-voice-attack', envelopes)
@@ -100,19 +106,37 @@ filterType.onclick = () => {
 filterType.classList.add('filterType');
 filterType.innerHTML = 'lowpass';
 filter.appendChild(filterType);
+
 /**
  *      [=== CONVOLVER ===]
  */
  
-ELM.GUI.Circle('knob-noise-blend', convolver)
-    .configure({radius: 92, lineWidth: 14, rangeColor: '#1cf', backdropColor: '#424242'});
-
 ELM.GUI.Circle('knob-convolver-blend', convolver)
-    .configure({radius: 52, lineWidth: 4, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false});
+    .configure({radius: 92, lineWidth: 8, rangeColor: '#1cf', backdropColor: '#424242'})
+    .subscribe({ update: (data) => {
+        synth.convolverGain.gain.setValueAtTime(data, context.currentTime);
+        console.log(data);
+        console.log(synth.convolverGain.gain.value);
+    
+    }});
 
-ELM.GUI.Circle('knob-convolver-cutoff', convolver)
-    .configure({radius: 52, lineWidth: 4, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false});
+// ELM.GUI.Circle('knob-convolver-blend', convolver)
+//     .configure({radius: 52, lineWidth: 4, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false});
 
+// ELM.GUI.Circle('knob-convolver-cutoff', convolver)
+//     .configure({radius: 52, lineWidth: 4, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false});
+
+/**
+ *      [=== CONVOLVER ===]
+ */
+
+ELM.GUI.Circle('knob-master-pan', master)
+    .configure({radius: 52, value: 0.75, sweepAngle: 180, lineWidth: 4, rangeColor: '#f55', backdropColor: '#424242', showHandle: false })
+    .subscribe({ update: (data) => synth.controls.pan = data });
+
+ELM.GUI.Circle('knob-master-amp', master)
+    .configure({radius: 92, value: 0.95, lineWidth: 8, rangeColor: '#f55', backdropColor: '#424242'})
+    .subscribe({ update: (data) => synth.amp = data });
 
 
 ELM.GUI.XYPad('elements-xypad-3', pads)
@@ -142,6 +166,10 @@ wave.load('audio/gun-reload.wav', function (buffer) {
     synth.buffer = buffer;
     samples_list.children[5].style.color = "#aaa";
     samples_list.children[5].style.backgroundColor = "#252525";
+});
+
+wave.load('IRs/carpark_balloon.wav', function (buffer) {
+    synth.convolver.buffer = buffer;
 });
 
 

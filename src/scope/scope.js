@@ -33,13 +33,21 @@ Scope.prototype = {
         ctx.strokeStyle = "#aaa";
         ctx.fillStyle = "#aaa";
         ctx.lineWidth = 1;
-        ctx.beginPath();
+        const base = Math.log(this.dataArray.length);
         for (let index = 0; index < this.dataArray.length; index++) {
+            let x = (Math.log(index) / base) * ctx.canvas.width;
             let bin = this.dataArray[index]
-            ctx.moveTo(step * index, 0);
-            ctx.lineTo(step * index, ((bin / 256) * 125));   
+            ctx.beginPath();
+            ctx.strokeStyle = "#aaa";
+            ctx.moveTo(x, 75);
+            ctx.lineTo(x, 75 - ((bin / 256) * 75));
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.strokeStyle = "#444";
+            ctx.moveTo(x, 75 - ((bin / 256) * 75));
+            ctx.lineTo(x, 0);
+            ctx.stroke();
         }
-        ctx.stroke();
         setTimeout(function () {
             that.run();
         }, 25);

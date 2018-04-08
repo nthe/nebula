@@ -296,4 +296,4 @@ Slider.prototype = {
 
 Slider.init.prototype = Slider.prototype;
 
-module.exports.Slider = Slider;
+module.exports = Slider;

@@ -14,7 +14,6 @@
         <img src="icons/media-record.svg" class="record-button" alt="music">
         <div class="record-button-bg">record</div>
         <img class="close" src="icons/x.svg" style="float: right; margin-right: 24px;" alt="music">
-        <!-- <img class="minimize" src="icons/chevron-bottom.svg" style="float: right; margin-right: 16px;" alt="music"> -->
     </section>
     <section class="centered-content control-panel filter-controls">
         <h5>filter</h5>
@@ -22,8 +21,13 @@
     <section class="centered-content control-panel amp-envelope">
         <h5>envelope</h5>
     </section>
-    <section class="centered-content control-panel convolver">
-        <h5>convolver</h5>
+    <section class="centered-content convolve-master-wrapper">
+        <section class="centered-content control-panel convolver">
+            <h5>convolver</h5>
+        </section>
+        <section class="centered-content control-panel master">
+            <h5>master</h5>
+        </section>
     </section>
     <section class="centered-content" id="panel">
         <img src="mount.png" style="position: absolute; bottom: 64px; width: 200px; z-index: -1; filter: invert(0.4);">
@@ -36,7 +40,6 @@
         </ul>
     </section>
 
-    <script src="WavAudioEncoder.min.js"></script>
     <script src="lib/index.min.js"></script>
     <script src="src/main.js"></script>
     

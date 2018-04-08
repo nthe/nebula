@@ -3,7 +3,10 @@ const common = require("../common/common");
 
 // default configuration of knob/gauge
 const DEFAULT_XYPAD_CONFIG = {
-    value: 0.18,
+    value: {
+        x: 0.5,
+        y: 0.5
+    },
     radius: 120,
     lineWidth: 16,
     startAngle: 180,
@@ -34,7 +37,7 @@ XYPad.init = function (id, parent) {
 
     this.config = Object.assign({}, DEFAULT_XYPAD_CONFIG);
     this.config.showCrossHair = true;
-    this.value = { x: 0.75  , y: 0.62 };
+    this.value = this.config.value;
 
     // create canvas
     this.element = window.document.createElement("canvas");
@@ -115,7 +118,8 @@ XYPad.prototype = {
 
         this.ctx.canvas.width = this.element.clientWidth;
         this.ctx.canvas.height = this.element.clientHeight;
-
+        this.value = this.config.value;
+        
         this.render();
         return this;
     },
