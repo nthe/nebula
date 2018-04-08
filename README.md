@@ -1,6 +1,6 @@
 # NEBULA
 
-[![Build Status](https://travis-ci.org/nthe/elements.svg?branch=master)](https://travis-ci.org/nthe/elements) Granular synthesizer based on HTML5, JavaScript and Web Audio API.
+[![Build Status](https://travis-ci.org/nthe/nebula.svg?branch=master)](https://travis-ci.org/nthe/nebula) Granular synthesizer based on HTML5, JavaScript and Web Audio API.
 
 ![screen](screen2.png)
 ## Getting Started
