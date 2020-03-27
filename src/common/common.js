@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 
 /**
  * @method subscribe
@@ -7,12 +7,14 @@
  * @returns {object} this
  */
 function subscribe(callback) {
+    console.log(this)
+    this.subscribers = this.subscribers || []
     if (!this.subscribers.indexOf(callback) < 0) {
-        return;
+        return
     }
-    callback.update(this.value);
-    this.subscribers.push(callback);
-    return this;
+    callback.update(this.value)
+    this.subscribers.push(callback)
+    return this
 }
 
 /**
@@ -21,13 +23,13 @@ function subscribe(callback) {
  * @param {function} callback callback method
  * @returns {object} this
  */
-function unsubscribe (callback) {
-    let position = this.subscribers.indexOf(callback);
+function unsubscribe(callback) {
+    let position = this.subscribers.indexOf(callback)
     if (position < 0) {
-        return;
+        return
     }
-    this.subscribers.splice(position, 1);
-    return this;
+    this.subscribers.splice(position, 1)
+    return this
 }
 
 /**
@@ -36,9 +38,9 @@ function unsubscribe (callback) {
  * @param {any} data data to publish
  * @returns {any} data
  */
-function emit (data) {
-    this.subscribers.map(f => f.update(data));
-    return data;
+function emit(data) {
+    this.subscribers.map(f => f.update(data))
+    return data
 }
 
 /**
@@ -47,13 +49,13 @@ function emit (data) {
  * @param {Event} [event] raised event
  * @returns {Event} touch event
  */
-const findTouch = function (event) {
-    if (!event.touches.length) return;
-    const touches = [];
+const findTouch = function(event) {
+    if (!event.touches.length) return
+    const touches = []
     for (let touch of event.touches) {
-        if (touch.target.id === this.element.id) touches.push(touch);
+        if (touch.target.id === this.element.id) touches.push(touch)
     }
-    return touches.length ? touches[0] : null;
+    return touches.length ? touches[0] : null
 }
 
 /**
@@ -61,5 +63,5 @@ const findTouch = function (event) {
  */
 module.exports = {
     events: { subscribe, unsubscribe, emit },
-    touch: { findTouch }
+    touch: { findTouch },
 }

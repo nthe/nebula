@@ -1,5 +1,5 @@
 body {
-    background-color: #333;
+    background-color: #424242;
     font-size: 15px;
     padding: 0;
     margin: 0;
@@ -11,7 +11,7 @@ body {
 }
 
 h5 {
-    color: #3a3a3a;
+    color: #777;
 }
 
 .filterType {
@@ -38,7 +38,7 @@ h5 {
     position: fixed;
     width: 100%;
     height: 32px;
-    background-color: #222;
+    background-color: #353535;
     bottom: 0;
     z-index: 1;
     box-shadow: 0 0 8px #111;
@@ -48,14 +48,14 @@ h5 {
 #elements-scope {
     /* border-top: 1px solid #777; */
     position: absolute;
-    top: 72px;
+    top: 76px;
 }
 
 .system-bar {
     position: fixed;
     width: 100%;
     height: 52px;
-    background-color: #222;
+    background-color: #353535;
     top: 0;
     z-index: 3;
     box-shadow: 0 0 8px #111;
@@ -102,7 +102,7 @@ h5 {
     position: fixed;
     width: 275px;
     height: 100%;
-    background-color: #2a2a2a;
+    background-color: #353535;
     right: 0;
     z-index: 1;
     box-shadow: 0 0 8px #111;
@@ -129,7 +129,7 @@ h5 {
 
 li.active {
     color: #fc1;
-    background-color: #242424;
+    background-color: #353535;
 }
 
 .samples-list {
@@ -150,13 +150,14 @@ li.active {
 .control-panel {
     margin-top: -24px;
     box-sizing: border-box;
-    background-color: #2a2a2a;
+    background-color: #353535;
     margin-left: 24px;
     z-index: 2;
-    box-shadow: 0 0 8px #111;
-    width: 120px;
+    box-shadow: 0 0 8px #222;
+    width: 85%;
     display: flex;
     color: white;
+    padding: 0 16px;
 }
 
 .control-panel canvas {
@@ -165,7 +166,7 @@ li.active {
 }
 
 .amp-envelope {
-    width: 160px;
+    margin-top: 16px;
 }
 
 #panel {
@@ -190,20 +191,24 @@ span[id*='elements-'] {
     vertical-align: middle;
 }
 
-
 canvas[id*='elements-waveform-'] {
     /* width: 500px;
     height: 125px; */
-    border: 1px solid #424242;
+    border-top: 1px solid white;
+    padding-top: 1px;
     /* background-color: #222; */
     /* box-shadow: inset 0 0 2px #333; */
     box-sizing: border-box;
-    border-radius: 8px;
+    width: 500px;
+    height: 75px;
+    min-width: 500px;
+    min-height: 75px;
+    margin-top: 25px;
 }
 
 canvas[id*='elements-scope-'] {
     width: 1000px;
-    height: 125px;
+    height: 70px;
     border: 0px solid transparent;
     background-color: #333;
     box-shadow: inset 0 0 16px #222;
