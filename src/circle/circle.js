@@ -163,7 +163,6 @@ Circle.prototype = {
      */
     mouseDragHandler: function (event) {
         event.preventDefault();
-        let initY = event.clientY;
 
         window.onmouseup = (e) => {
             e.preventDefault();
@@ -173,33 +172,8 @@ Circle.prototype = {
 
         window.onmousemove = (e) => {
             e.preventDefault();
-            // const rect = this.element.getBoundingClientRect();
-            // const center = {
-            //     x: rect.left + (rect.width / 2),
-            //     y: rect.top + (rect.height / 2)
-            // };
-            
-            // const firstLeg = {
-            //     x: center.x + 1,
-            //     y: center.y
-            // };
-
-            // const secondLeg = {
-            //     x: e.clientX,
-            //     y: e.clientY
-            // };
-
-            // const deg = utils.angle(center, firstLeg, secondLeg); 
-            // console.log(center, firstLeg, secondLeg, deg);
-
-            if (e.clientY > initY) {
-                this.value -= 0.025;
-            } else {
-                this.value += 0.025;
-            }
-            initY = e.clientY;
-            this.value = this.value >= 1 ? 1 : this.value;
-            this.value = this.value <= 0 ? 0 : this.value;
+            this.value -= e.movementY / 200;
+            this.value = utils.limitTo(this.value, 0, 1);
             this.render();
         };
     },

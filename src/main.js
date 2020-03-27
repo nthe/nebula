@@ -73,7 +73,6 @@ ELM.KeyBoard().subscribe(synth);
 const scope = ELM.GUI.Scope('elements-scope', pads);
 scope.init(context).connect(synth.master).run();
 
-// ELM.GUI.Slider('slider', system_bar);
 
 // create waveform window
 const wave = ELM.GUI.WaveForm('elements-waveform-1', pads);
