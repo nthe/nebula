@@ -2,24 +2,23 @@
 
 [![Build Status](https://travis-ci.org/nthe/nebula.svg?branch=master)](https://travis-ci.org/nthe/nebula) Granular synthesizer based on HTML5, JavaScript and Web Audio API.
 
-![screen](screen2.png)
+![screen](screen.png)
+
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
-
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
 What things you need to install the software and how to install them
 
-- [NodeJS](https://nodejs.org/en/download/)
-- [Chrome](https://www.google.com/chrome/) (recommended)
-- ElectronJS - (optional) - allows running app as desktop app
+-   [NodeJS](https://nodejs.org/en/download/)
+-   [Chrome](https://www.google.com/chrome/) (recommended)
+-   ElectronJS - (optional) - allows running app as desktop app
 
 ```
 npm install -D electron@latest
 ```
-
 
 ### Installing
 
@@ -29,7 +28,7 @@ Required dependencies
 npm install
 ```
 
-### Executing 
+### Executing
 
 Open `index.html` file in your browser, or run command below to start desktop version (requires electron-js).
 
@@ -54,11 +53,13 @@ Coverage report is located at `/doc/index.html`.
 ## Built With
 
 Complete build (browserify + uglify)
+
 ```
 npm run build
 ```
 
 Browserify only
+
 ```
 npm run browserify
 ```
@@ -69,11 +70,11 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/nthe/elements/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/nthe/elements/tags).
 
 ## Authors
 
-* **Juraj Onuska** 
+-   **Juraj Onuska**
 
 See also the list of [contributors](https://github.com/nthe/elements/contributors) who participated in this project.
 
@@ -83,4 +84,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* [Ehsan Ziya](https://github.com/zya/granular) - inspiration and code base for audio engine
+-   [Ehsan Ziya](https://github.com/zya/granular) - inspiration and code base for audio engine
