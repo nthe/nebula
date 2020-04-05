@@ -4,27 +4,18 @@
     "description": "",
     "main": "main.js",
     "scripts": {
-        "test": "mocha src/**/*.test.js",
-        "coverage": "istanbul cover node_modules/mocha/bin/_mocha src/**/*.test.js -x src/**/*.test.js",
-        "doc": "node_modules/.bin/esdoc",
-        "browserify": "browserify ./src/index.js --standalone ELM -o ./lib/index.js",
-        "minify": "node node_modules/uglify-js-es6/bin/uglifyjs lib/index.js --compress --mangle -o lib/index.min.js",
+        "start": "electron .",
         "build": "npm run browserify",
-        "app": "electron .",
-        "all": "npm run build && npm run app"
+        "all": "npm run build && npm run start",
+        "browserify": "browserify ./src/index.js --standalone ELM -o ./lib/index.js",
+        "minify": "node node_modules/uglify-js-es6/bin/uglifyjs lib/index.js --compress --mangle -o lib/index.min.js"
     },
     "author": "Juraj Onuska @ 2020",
     "license": "ISC",
     "devDependencies": {
         "browserify": "^16.1.1",
         "canvas": "^2.6.1",
-        "chai": "^4.1.2",
-        "electron": "^1.8.8",
-        "esdoc": "^1.0.4",
-        "esdoc-standard-plugin": "^1.0.0",
-        "istanbul": "^1.1.0-alpha.1",
-        "jsdom": "^11.6.2",
-        "mocha": "^5.0.4",
+        "electron": "^8.2.0",
         "nodemon": "^1.17.3",
         "typescript": "^3.8.3",
         "uglify-js-es6": "^2.8.9"
