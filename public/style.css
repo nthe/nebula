@@ -8,6 +8,7 @@ body {
     font-family: monospace;
     font-size: 17px;
     user-select: none;
+    border-radius: 8px;
 }
 
 .content {
@@ -47,7 +48,7 @@ body {
     margin: 16px 13px;
     position: absolute;
     fill: gray;
-    z-index: 3;
+    z-index: 20;
 }
 
 .record-button-bg {
@@ -107,7 +108,8 @@ ul {
 
 .samples ul li.active {
     color: #fc1;
-    background-color: #222;
+    background-color: #252525;
+    border-radius: 24px;
 }
 
 .samples-list {
@@ -132,6 +134,7 @@ ul {
 
 .console {
     margin-top: 64px;
+    margin-left: 24px;
 }
 
 .console2 {

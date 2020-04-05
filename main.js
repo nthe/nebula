@@ -6,9 +6,10 @@ app.on('ready', function () {
     const win = new BrowserWindow({
         width: 760,
         height: 600,
+        radii: [4, 4, 4, 4],
         frame: false,
         fullscreen: false,
-        transparent: false,
+        transparent: true,
         fullscreenable: false,
         titleBarStyle: 'hidden',
     })
