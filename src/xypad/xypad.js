@@ -23,7 +23,7 @@ const DEFAULT_XYPAD_CONFIG = {
 
 const XYPad = (id, parent) => new XYPad.init(id, parent)
 
-XYPad.init = function(id, parent) {
+XYPad.init = function (id, parent) {
     if (typeof id === 'undefined') {
         throw '(XYPad) id is required'
     }
@@ -61,7 +61,7 @@ XYPad.prototype = {
      * @description (re)render knob/gauge
      * @return {Circle} this
      */
-    render: function() {
+    render: function () {
         // clear
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
 
@@ -103,15 +103,15 @@ XYPad.prototype = {
      * @param {object} config new (or partial) configuration
      * @returns {XYPad} this
      */
-    configure: function(config) {
+    configure: function (config) {
         this.config = Object.assign(this.config, config)
 
         this.element.style.width = this.config.width
         this.element.style.height = this.config.height
         this.element.style.backgroundColor = '#3a3a3a'
-        this.element.style.boxShadow = 'inset 0 0 16px #111'
+        this.element.style.boxShadow = 'inset 0 0 4px #111'
         this.element.style.marginTop = '8px'
-        this.element.style.border = '0 solid transparent'
+        // this.element.style.border = '1px solid #777'
         this.element.style.boxSizing = 'border-box'
         this.element.style.borderRadius = '8px'
 
@@ -123,7 +123,7 @@ XYPad.prototype = {
         return this
     },
 
-    touchDragHandler: function(event) {
+    touchDragHandler: function (event) {
         event.preventDefault()
         const clickedId = event.target.id
         const w = this.ctx.canvas.width
@@ -132,13 +132,13 @@ XYPad.prototype = {
         this.value.x = (touch.clientX - touch.target.offsetLeft) / w
         this.value.y = (touch.clientY - touch.target.offsetTop) / h
 
-        this.element.ontouchend = e => {
+        this.element.ontouchend = (e) => {
             e.preventDefault()
             this.element.ontouchend = null
             this.element.ontouchmove = null
         }
 
-        this.element.ontouchmove = e => {
+        this.element.ontouchmove = (e) => {
             e.preventDefault()
             if (e.target.id !== clickedId) return
             const touch = this.findTouch(e)
@@ -157,7 +157,7 @@ XYPad.prototype = {
      * @description process mouse drag event
      * @param {MouseEvent} event mouse event
      */
-    mouseDragHandler: function(event) {
+    mouseDragHandler: function (event) {
         event.preventDefault()
         const clickedId = event.target.id
         const w = this.ctx.canvas.width
@@ -166,13 +166,13 @@ XYPad.prototype = {
         if (event.offsetX <= w) this.value.x = event.offsetX / w
         if (event.offsetY <= h) this.value.y = event.offsetY / h
 
-        window.document.onmouseup = e => {
+        window.document.onmouseup = (e) => {
             e.preventDefault()
             window.document.onmouseup = null
             window.document.onmousemove = null
         }
 
-        window.document.onmousemove = e => {
+        window.document.onmousemove = (e) => {
             e.preventDefault()
             if (e.target.id !== clickedId) return
             const w = this.ctx.canvas.width
@@ -195,7 +195,7 @@ XYPad.prototype = {
      * @description disable pad
      * @returns {XYPad} this
      */
-    deactivate: function() {
+    deactivate: function () {
         this.element.onmousedown = null
         this.element.ontouchstart = null
         return this
@@ -206,7 +206,7 @@ XYPad.prototype = {
      * @description enable pad
      * @returns {XYPad} this
      */
-    activate: function() {
+    activate: function () {
         this.element.onmousedown = this.mouseDragHandler.bind(this)
         this.element.ontouchstart = this.touchDragHandler.bind(this)
         return this

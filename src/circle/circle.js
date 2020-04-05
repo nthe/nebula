@@ -5,16 +5,16 @@ const utils = require('../utils/utils')
 // default configuration of knob/gauge
 const DEFAULT_CIRCLE_CONFIG = {
     value: 0.18,
-    radius: 120,
-    lineWidth: 16,
+    radius: 52,
+    lineWidth: 2,
     startAngle: 180,
     sweepAngle: 360,
     backdropPadding: 4,
-    showHandle: true,
+    showHandle: false,
     handleRadius: 2,
     handleColor: '#333',
-    rangeColor: '#fc1',
-    backdropColor: '#330',
+    rangeColor: '#1cf',
+    backdropColor: '#424242',
     indicatorColor: '#333',
     rounded: true,
 }
@@ -24,7 +24,7 @@ const DEFAULT_CIRCLE_CONFIG = {
  * @description convert angle from degrees to radians
  * @param {number} degrees angle in degress
  */
-const toRadians = degrees => degrees * (Math.PI / 180)
+const toRadians = (degrees) => degrees * (Math.PI / 180)
 
 /**
  * @constructor
@@ -33,7 +33,7 @@ const toRadians = degrees => degrees * (Math.PI / 180)
  * @param {string} id identifier of new element
  * @param {HTMLElement} parent host of new element
  */
-const Circle = function(id, parent) {
+const Circle = function (id, parent) {
     return new Circle.init(id, parent)
 }
 
@@ -44,7 +44,7 @@ const Circle = function(id, parent) {
  * @param {string} id identifier of new element
  * @param {HTMLElement} parent host of new element
  */
-Circle.init = function(id, parent) {
+Circle.init = function (id, parent) {
     if (typeof id === 'undefined') {
         throw '(Circle) id is required'
     }
@@ -82,7 +82,7 @@ Circle.prototype = {
      * @description (re)render knob/gauge
      * @return {Circle} this
      */
-    render: function() {
+    render: function () {
         // clear
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
 
@@ -144,7 +144,7 @@ Circle.prototype = {
      * @param {object} config new (or partial) configuration
      * @returns {Circle} this
      */
-    configure: function(config) {
+    configure: function (config) {
         this.config = Object.assign(this.config, config)
         this.value = this.config.value
         this.element.width = this.config.radius
@@ -161,16 +161,16 @@ Circle.prototype = {
      * @description process mouse drag event
      * @param {MouseEvent} event mouse event
      */
-    mouseDragHandler: function(event) {
+    mouseDragHandler: function (event) {
         event.preventDefault()
 
-        window.onmouseup = e => {
+        window.onmouseup = (e) => {
             e.preventDefault()
             window.onmouseup = null
             window.onmousemove = null
         }
 
-        window.onmousemove = e => {
+        window.onmousemove = (e) => {
             e.preventDefault()
             this.value -= e.movementY / 200
             this.value = utils.limitTo(this.value, 0, 1)
@@ -184,7 +184,7 @@ Circle.prototype = {
      * @param {number} value new value
      * @return {Circle} this
      */
-    setValue: function(value) {
+    setValue: function (value) {
         this.value = value
         this.render()
         return this
@@ -199,7 +199,7 @@ Circle.prototype = {
      * @description disable knob/gauge
      * @returns {Circle} this
      */
-    deactivate: function() {
+    deactivate: function () {
         this.element.onmousedown = null
         return this
     },
@@ -209,7 +209,7 @@ Circle.prototype = {
      * @description enable knob/gauge
      * @returns {Circle} this
      */
-    activate: function() {
+    activate: function () {
         this.element.onmousedown = this.mouseDragHandler.bind(this)
         return this
     },
@@ -219,7 +219,7 @@ Circle.prototype = {
      * @description rendered centered label
      * @returns {Circle} this;
      */
-    withLabel: function(text, top = 100, size = 11) {
+    withLabel: function (text, top = 100, size = 11) {
         const label = document.createElement('p')
         label.classList.add('label')
         label.innerText = text

@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="./style.css" />
     </head>
 
-    <body>
+    <body class="debug">
         <section class="system-bar">
             <img
                 src="./assets/icons/media-record.svg"
@@ -22,22 +22,8 @@
                 alt="music"
             />
         </section>
-        <section class="centered-content">
-            <section
-                class="centered-content control-panel filter-controls"
-            ></section>
-        </section>
-        <section class="centered-content convolve-master-wrapper">
-            <section class="centered-content control-panel convolver">
-                <h5>convolver</h5>
-            </section>
-            <section class="centered-content control-panel master">
-                <h5>master</h5>
-            </section>
-        </section>
-        <section class="centered-content" id="panel"></section>
-        <section class="centered-content" id="right-controls"></section>
-        <section class="status-bar"></section>
+        <section class="centered-panel console"></section>
+        <section class="centered-panel" id="panel"></section>
 
         <section class="samples">
             <ul class="samples-list"></ul>
@@ -45,6 +31,7 @@
         </section>
 
         <script src="../lib/index.js"></script>
+        <script src="./helpers.js"></script>
         <script src="./script.js"></script>
     </body>
 </html>

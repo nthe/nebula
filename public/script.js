@@ -9,13 +9,20 @@ const context = new AudioContext()
 
 // get references
 const pads = document.querySelector('#panel')
-const envelopes = document.querySelector('.amp-envelope')
-const filter = document.querySelector('.filter-controls')
-const convolver = document.querySelector('.convolver')
-const master = document.querySelector('.master')
+const consolePanel = document.querySelector('.console')
 const samples_list = document.querySelector('.samples-list')
 const ir_samples_list = document.querySelector('.ir-samples-list')
 const system_bar = document.querySelector('.system-bar')
+
+// -------------------------------------------------------------- ENGINE SETUP
+
+const synth = ELM.Synth(context)
+
+ELM.KeyBoard().subscribe(synth)
+
+ELM.GUI.Scope('elements-scope', pads).init(context).connect(synth.master).run()
+
+// -------------------------------------------------------------- RESOURCES
 
 // pre-populate samples
 for (let sample of [
@@ -27,7 +34,6 @@ for (let sample of [
     'gun-reload',
     'metal-can-1',
     'metallic-1',
-    'foley',
 ]) {
     const li = document.createElement('li')
     li.innerHTML = sample
@@ -38,11 +44,11 @@ for (let sample of [
 samples_list.addEventListener('click', (event) => {
     const sample = `./assets/audio/samples/${event.target.innerHTML}.wav`
     for (let el of samples_list.children) {
-        el.style.color = '#424242'
-        el.style.backgroundColor = 'transparent'
+        if (el.classList.contains('active')) {
+            el.classList.toggle('active')
+        }
     }
-    event.target.style.backgroundColor = '#252525'
-    event.target.style.color = '#aaa'
+    event.target.classList.toggle('active')
     wave.load(sample, function (buffer) {
         synth.buffer = buffer
     })
@@ -81,169 +87,106 @@ ir_samples_list.addEventListener('click', (event) => {
     })
 })
 
-// create synth
-const synth = ELM.Synth(context)
+// -------------------------------------------------------------- WAVEFORM SETUP
 
-// create virtual keyboard
-ELM.KeyBoard().subscribe(synth)
-
-const scope = ELM.GUI.Scope('elements-scope', pads)
-scope.init(context).connect(synth.master).run()
-
-// create waveform window
 const wave = ELM.GUI.WaveForm('elements-waveform-1', pads, synth)
-
-// wave.subscribe({ update: console.log })
-// console.log(wave)
 
 const wave_IR = ELM.GUI.WaveForm('elements-waveform-2', pads)
 
-/**
- *      [=== ENVELOPES ===]
- */
+wave.load('./assets/audio/samples/gun-reload.wav', function (buffer) {
+    synth.buffer = buffer
+    // samples_list.children[5].style.color = '#aaa'
+    // samples_list.children[5].style.backgroundColor = '#252525'
+})
 
-ELM.GUI.Circle('knob-grain-skew', filter)
+wave_IR.load('./assets/audio/impulses/warehouse.wav', function (buffer) {
+    synth.convolver.buffer = buffer
+})
+
+// -------------------------------------------------------------- GRAIN CONTROL PANEL
+
+ELM.GUI.Circle('knob-grain-skew', consolePanel)
     .configure({
-        radius: 72,
-        lineWidth: 4,
-        sweepAngle: 360,
-        value: 0.25,
         rangeColor: '#fff',
-        backdropColor: '#424242',
-        showHandle: false,
+        value: 0.25,
     })
     .subscribe({ update: (data) => (synth.controls.grainSkew = data) })
-    .withLabel('Skew', 175, 13)
 
-ELM.GUI.Circle('knob-grain-size', filter)
+ELM.GUI.Circle('knob-grain-size', consolePanel)
     .configure({
-        radius: 120,
-        lineWidth: 16,
-        value: 0.5,
         rangeColor: '#fff',
-        backdropColor: '#424242',
+        value: 0.5,
     })
     .subscribe({ update: (data) => (synth.controls.grainSize = data) })
-    .withLabel('Size', 300, 16)
 
-/**
- *      [=== FILTER ===]
- */
-
-ELM.GUI.Circle('knob-filter-cutoff', filter)
+ELM.GUI.Circle('knob-grain-density', consolePanel)
     .configure({
-        radius: 72,
-        lineWidth: 6,
-        value: 1,
-        rangeColor: '#1f7',
-        backdropColor: '#424242',
+        rangeColor: '#fff',
+        sweepAngle: 180,
+        value: 0.8,
     })
-    .subscribe({
-        update: (data) => (synth.cutoff = Math.pow(data, 2) * 20000),
-    })
-    .withLabel('Freq', 423)
+    .subscribe({ update: (data) => (synth.controls.density = data * 100) })
 
-ELM.GUI.Circle('knob-filter-q', filter)
+ELM.GUI.Circle('knob-grain-spread', consolePanel)
     .configure({
-        radius: 52,
-        lineWidth: 4,
-        value: 0.1,
-        rangeColor: '#1f7',
-        backdropColor: '#424242',
-        showHandle: false,
+        rangeColor: '#fff',
+        sweepAngle: 180,
+        startAngle: 0,
+        value: 0.8,
     })
-    .subscribe({ update: (data) => (synth.Q = data * 30) })
-    .withLabel('Q', 510)
+    .subscribe({ update: (data) => (synth.controls.spread = 1 - data) })
 
-const filterType = window.document.createElement('p')
-let selectedFilterIndex = 0
-filterType.onclick = () => {
-    selectedFilterIndex = (selectedFilterIndex + 1) % synth.filterTypes.length
-    synth.filterType = synth.filterTypes[selectedFilterIndex]
-    filterType.innerHTML = synth.filterTypes[selectedFilterIndex]
-}
+// -------------------------------------------------------------- CONSOLE PANEL
 
-filterType.classList.add('filterType')
-filterType.innerHTML = 'lowpass'
-filter.appendChild(filterType)
-
-/**
- *      [=== CONVOLVER ===]
- */
-
-ELM.GUI.Circle('knob-convolver-blend', convolver)
+ELM.GUI.Circle('knob-master-amp', consolePanel)
     .configure({
-        radius: 52,
-        lineWidth: 6,
+        value: 0.8,
+        rangeColor: '#f55',
+    })
+    .subscribe({ update: (data) => (synth.amp = data) })
+
+ELM.GUI.Circle('knob-convolver-blend', consolePanel)
+    .configure({
         rangeColor: '#1cf',
-        backdropColor: '#424242',
+        value: 0.75,
     })
     .subscribe({
         update: (data) =>
             synth.convolverGain.gain.setValueAtTime(data, context.currentTime),
     })
-    .withLabel('Blend')
 
-/**
- *      [=== CONVOLVER ===]
- */
-
-ELM.GUI.Circle('knob-master-pan', master)
+ELM.GUI.Circle('knob-filter-cutoff', consolePanel)
     .configure({
-        radius: 52,
-        value: 0.75,
-        sweepAngle: 180,
-        lineWidth: 4,
-        rangeColor: '#f55',
-        backdropColor: '#424242',
-        showHandle: false,
+        rangeColor: '#1f7',
+        value: 1,
     })
-    .subscribe({ update: (data) => (synth.controls.pan = data) })
-    .withLabel('Pan')
+    .subscribe({
+        update: (data) => (synth.cutoff = Math.pow(data, 2) * 20000),
+    })
 
-ELM.GUI.Circle('knob-master-amp', master)
+ELM.GUI.Circle('knob-filter-q', consolePanel)
     .configure({
-        radius: 52,
-        value: 0.95,
-        lineWidth: 6,
-        rangeColor: '#f55',
-        backdropColor: '#424242',
+        rangeColor: '#1f7',
+        value: 0.1,
     })
-    .subscribe({ update: (data) => (synth.amp = data) })
-    .withLabel('Amp')
+    .subscribe({ update: (data) => (synth.Q = data * 30) })
+
+consolePanel.appendChild(attachFilterTypeSwitch(synth))
+
+// -------------------------------------------------------------- XY-PAD PANEL
 
 ELM.GUI.XYPad('elements-xypad-3', pads)
     .configure({ width: 500, height: 250 })
     .subscribe({
         update: function (data) {
             synth.controls.offset = data.x
-            // synth.controls.amp = 1 - Math.pow(data.y, 2);
             synth.controls.trans = Math.pow(1.33 - data.y, 4)
             wave.value = data.x
             wave.render()
         },
     })
 
-const xypad2 = ELM.GUI.XYPad('elements-xypad-4', pads)
-    .configure({ width: 500, height: 125 })
-    .subscribe({
-        update: function (data) {
-            synth.controls.density = data.x * 100
-            synth.controls.spread = 1 - data.y
-        },
-    })
-
-xypad2.element.style.marginLeft = 8
-
-wave.load('./assets/audio/samples/gun-reload.wav', function (buffer) {
-    synth.buffer = buffer
-    samples_list.children[5].style.color = '#aaa'
-    samples_list.children[5].style.backgroundColor = '#252525'
-})
-
-wave_IR.load('./assets/audio/impulses/warehouse.wav', function (buffer) {
-    synth.convolver.buffer = buffer
-})
+// -------------------------------------------------------------- RECORDING SETUP
 
 document.querySelector('.close').onclick = () => this.window.close()
 
