@@ -1,22 +1,19 @@
 body {
-    background-color: #353535;
+    background-color: #2a2a2a;
     font-size: 15px;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: monospace;
     font-size: 17px;
     user-select: none;
 }
 
-body.debug > * {
-    border: 1px dashed orangered;
-    box-sizing: border-box;
-}
-
-h5 {
-    color: #777;
+.content {
+    flex-direction: row;
+    display: flex;
+    margin-top: 24px;
 }
 
 .filterType {
@@ -28,7 +25,7 @@ h5 {
 .system-bar {
     width: 100%;
     height: 52px;
-    background-color: #353535;
+    background-color: #2a2a2a;
     top: 0;
     -webkit-app-region: drag;
 }
@@ -45,10 +42,11 @@ h5 {
     filter: invert(1);
 }
 
-.system-bar img.record-button {
+.system-bar .record-button {
     height: 26px;
     margin: 16px 13px;
     position: absolute;
+    fill: gray;
     z-index: 3;
 }
 
@@ -69,19 +67,28 @@ h5 {
     font-size: 13px;
 }
 
+h4 {
+    padding-left: 24px;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+ul {
+    margin: 4px;
+}
+
 .samples {
-    position: fixed;
-    width: 275px;
-    height: 100%;
-    background-color: #353535;
-    right: 0;
-    z-index: 1;
-    border-left: 1px solid #555;
+    width: 100%;
+    background-color: #2a2a2a;
+    transition: right 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .samples ul {
     list-style: none;
-    margin-top: 72px;
     padding-left: 0;
     font-size: 13px;
     line-height: 24px;
@@ -100,25 +107,35 @@ h5 {
 
 .samples ul li.active {
     color: #fc1;
-    background-color: #353535;
+    background-color: #222;
 }
 
 .samples-list {
-    height: 30%;
+    display: flex;
+    flex-direction: row;
 }
 
 .ir-samples-list {
-    height: 50%;
+    display: flex;
+    flex-direction: row;
 }
 
 .centered-panel {
     display: flex;
     align-items: center;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: start;
 
     box-sizing: border-box;
     margin-left: 16px;
+}
+
+.console {
+    margin-top: 64px;
+}
+
+.console2 {
+    margin-top: 64px;
 }
 
 .centered-panel canvas {
@@ -136,11 +153,11 @@ span[id*='elements-'] {
 }
 
 canvas[id*='elements-scope'] {
-    margin-bottom: -14px;
+    margin-bottom: -10px;
 }
 
 canvas[id*='elements-waveform-'] {
-    border-top: 1px solid #eee;
+    border-top: 1px solid #777;
     padding-top: 1px;
     box-sizing: border-box;
     width: 500px;

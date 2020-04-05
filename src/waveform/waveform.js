@@ -11,7 +11,7 @@ const DEFAULT_WAVEFORM_CONFIG = {
 
 const WaveForm = (id, parent, synth) => new WaveForm.init(id, parent, synth)
 
-WaveForm.init = function(id, parent, synth) {
+WaveForm.init = function (id, parent, synth) {
     this.element = window.document.createElement('div')
     this.backdrop = window.document.createElement('canvas')
     this.front = window.document.createElement('canvas')
@@ -50,7 +50,7 @@ WaveForm.prototype = {
     unsubscribe: common.events.unsubscribe,
     emit: common.events.emit,
 
-    drawWave: function(data) {
+    drawWave: function (data) {
         var ctx = this.backdrop.getContext('2d')
         var fctx = this.front.getContext('2d')
         var w = ctx.canvas.width
@@ -90,43 +90,43 @@ WaveForm.prototype = {
         this.render()
     },
 
-    render: function() {
+    render: function () {
         var fctx = this.front.getContext('2d')
         var w = fctx.canvas.width
         var h = fctx.canvas.height
         fctx.clearRect(0, 0, w, h)
         fctx.strokeStyle = this.config.indicatorColor
-        fctx.lineWidth = 1
+        fctx.lineWidth = 0.5
         fctx.beginPath()
         fctx.moveTo(this.value * w, 0)
-        fctx.lineTo(this.value * w, h)
+        fctx.lineTo(this.value * w, h * 1.5)
         fctx.stroke()
     },
 
-    update: function(data) {
+    update: function (data) {
         this.value = data.x
         this.render()
     },
 
-    dragOverHandler: function(event) {
+    dragOverHandler: function (event) {
         event.preventDefault()
     },
 
-    dropHandler: function(event) {
+    dropHandler: function (event) {
         event.preventDefault()
         var file = event.dataTransfer.files[0]
         var reader = new FileReader()
         var that = this
-        reader.onload = function(event) {
+        reader.onload = function (event) {
             var array = event.target.result
             context.decodeAudioData(
                 array,
-                function(b) {
+                function (b) {
                     that.buffer = b
                     that.drawWave(b.getChannelData(0))
                     that.synth.buffer = b
                 },
-                function() {
+                function () {
                     alert('loading failed')
                 }
             )
@@ -139,7 +139,7 @@ WaveForm.prototype = {
      * @description process mouse drag event
      * @param {MouseEvent} event mouse event
      */
-    mouseDragHandler: function(event) {
+    mouseDragHandler: function (event) {
         event.preventDefault()
         const clickedId = event.target.id
         const w = this.backdrop.width
@@ -148,13 +148,13 @@ WaveForm.prototype = {
 
         this.render()
 
-        window.document.onmouseup = e => {
+        window.document.onmouseup = (e) => {
             e.preventDefault()
             window.document.onmouseup = null
             window.document.onmousemove = null
         }
 
-        window.document.onmousemove = e => {
+        window.document.onmousemove = (e) => {
             e.preventDefault()
             if (e.target.id !== clickedId) return
             const w = this.backdrop.width
@@ -163,20 +163,20 @@ WaveForm.prototype = {
         }
     },
 
-    load: function(url, callback) {
+    load: function (url, callback) {
         var request = new window.XMLHttpRequest()
         var that = this
         request.open('GET', url, true)
         request.responseType = 'arraybuffer'
-        request.onload = function() {
+        request.onload = function () {
             context.decodeAudioData(
                 request.response,
-                function(b) {
+                function (b) {
                     that.buffer = b
                     that.drawWave(b.getChannelData(0))
                     callback(b)
                 },
-                function() {
+                function () {
                     alert('loading failed')
                 }
             )
@@ -185,7 +185,7 @@ WaveForm.prototype = {
         return this
     },
 
-    deactivate: function() {
+    deactivate: function () {
         this.element.removeEventListener(
             'dragover',
             this.dragOverHandler.bind(this),
@@ -199,7 +199,7 @@ WaveForm.prototype = {
         this.element.onmousedown = null
     },
 
-    activate: function() {
+    activate: function () {
         this.element.addEventListener(
             'dragover',
             this.dragOverHandler.bind(this),

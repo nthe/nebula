@@ -4,8 +4,8 @@ const url = require('url')
 
 app.on('ready', function () {
     const win = new BrowserWindow({
-        width: 1125,
-        height: 640,
+        width: 760,
+        height: 600,
         frame: false,
         fullscreen: false,
         transparent: false,

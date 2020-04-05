@@ -36,7 +36,7 @@ XYPad.init = function (id, parent) {
     this.subscribers = []
 
     this.config = Object.assign({}, DEFAULT_XYPAD_CONFIG)
-    this.config.showCrossHair = true
+    this.config.showCrossHair = false
     this.value = this.config.value
 
     // create canvas
@@ -69,11 +69,11 @@ XYPad.prototype = {
         const left = this.ctx.canvas.width * this.value.x
 
         if (this.config.showCrossHair) {
-            this.ctx.strokeStyle = '#777'
+            this.ctx.strokeStyle = '#aaa'
             this.ctx.beginPath()
             this.ctx.moveTo(0, top)
             this.ctx.lineTo(this.ctx.canvas.width, top)
-            this.ctx.lineWidth = 0.5
+            this.ctx.lineWidth = 0
             this.ctx.stroke()
 
             this.ctx.beginPath()
@@ -85,7 +85,7 @@ XYPad.prototype = {
         if (this.config.showHandle) {
             this.ctx.beginPath()
             this.ctx.arc(left, top, 4, 0, 2 * Math.PI)
-            this.ctx.lineWidth = 2
+            this.ctx.lineWidth = 1
             this.ctx.fillStyle = 'transparent'
             this.ctx.strokeStyle = '#fc1'
             this.ctx.stroke()
@@ -108,7 +108,7 @@ XYPad.prototype = {
 
         this.element.style.width = this.config.width
         this.element.style.height = this.config.height
-        this.element.style.backgroundColor = '#3a3a3a'
+        this.element.style.backgroundColor = '#333'
         this.element.style.boxShadow = 'inset 0 0 4px #111'
         this.element.style.marginTop = '8px'
         // this.element.style.border = '1px solid #777'
