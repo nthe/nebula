@@ -14,6 +14,10 @@ h5 {
     color: #777;
 }
 
+.filter-controls {
+    padding: 32px 0;
+}
+
 .filterType {
     color: #aaa;
     font-size: 13px;
@@ -43,12 +47,6 @@ h5 {
     z-index: 1;
     box-shadow: 0 0 8px #111;
     /* -webkit-app-region: drag; */
-}
-
-#elements-scope {
-    /* border-top: 1px solid #777; */
-    position: absolute;
-    top: 76px;
 }
 
 .system-bar {
@@ -162,7 +160,6 @@ li.active {
 
 .control-panel canvas {
     margin: 16px 0;
-    /* float: */
 }
 
 .amp-envelope {
@@ -171,7 +168,6 @@ li.active {
 
 #panel {
     height: 100%;
-    /* flex-grow: 1; */
     margin: auto 32px;
     box-sizing: border-box;
 }
@@ -192,18 +188,17 @@ span[id*='elements-'] {
 }
 
 canvas[id*='elements-waveform-'] {
-    /* width: 500px;
-    height: 125px; */
-    border-top: 1px solid white;
+    border-top: 1px solid #eee;
     padding-top: 1px;
-    /* background-color: #222; */
-    /* box-shadow: inset 0 0 2px #333; */
     box-sizing: border-box;
     width: 500px;
     height: 75px;
     min-width: 500px;
     min-height: 75px;
-    margin-top: 25px;
+}
+
+#elements-waveform-2 {
+    display: none;
 }
 
 canvas[id*='elements-scope-'] {
@@ -229,10 +224,11 @@ canvas[id*='elements-scope-'] {
     justify-content: flex-start;
 }
 
-#elements-scope {
-    /* border-top: 1px solid #444; */
-}
-
-#elements-waveform-2 {
-    display: none;
+.label {
+    font-size: 11px;
+    font-weight: bold;
+    position: absolute;
+    color: #bbb;
+    z-index: 10;
+    pointer-events: none;
 }

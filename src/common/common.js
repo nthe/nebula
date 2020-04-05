@@ -7,7 +7,7 @@
  * @returns {object} this
  */
 function subscribe(callback) {
-    console.log(this)
+    // console.log(this)
     this.subscribers = this.subscribers || []
     if (!this.subscribers.indexOf(callback) < 0) {
         return

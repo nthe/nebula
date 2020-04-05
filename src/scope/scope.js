@@ -41,15 +41,10 @@ Scope.prototype = {
             ctx.moveTo(x, 55)
             ctx.lineTo(x, 55 - (bin / 256) * 55)
             ctx.stroke()
-            // ctx.beginPath()
-            // ctx.strokeStyle = '#444'
-            // ctx.moveTo(x, (bin / 256) * 75)
-            // ctx.lineTo(x, 75)
-            // ctx.stroke()
         }
         setTimeout(function() {
             that.run()
-        }, 25)
+        }, 50)
     },
 
     init: function(context) {

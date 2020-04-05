@@ -87,6 +87,12 @@ const synth = ELM.Synth(context)
 // create virtual keyboard
 ELM.KeyBoard().subscribe(synth)
 
+const scope = ELM.GUI.Scope('elements-scope', pads)
+scope
+    .init(context)
+    .connect(synth.master)
+    .run()
+
 // create waveform window
 const wave = ELM.GUI.WaveForm('elements-waveform-1', pads, synth)
 
@@ -101,15 +107,16 @@ const wave_IR = ELM.GUI.WaveForm('elements-waveform-2', pads)
 
 ELM.GUI.Circle('knob-grain-skew', filter)
     .configure({
-        radius: 52,
+        radius: 72,
         lineWidth: 4,
-        sweepAngle: 180,
+        sweepAngle: 360,
         value: 0.25,
         rangeColor: '#fff',
         backdropColor: '#424242',
         showHandle: false,
     })
     .subscribe({ update: data => (synth.controls.grainSkew = data) })
+    .withLabel('Skew', 175, 13)
 
 ELM.GUI.Circle('knob-grain-size', filter)
     .configure({
@@ -120,10 +127,24 @@ ELM.GUI.Circle('knob-grain-size', filter)
         backdropColor: '#424242',
     })
     .subscribe({ update: data => (synth.controls.grainSize = data) })
+    .withLabel('Size', 300, 16)
 
 /**
  *      [=== FILTER ===]
  */
+
+ELM.GUI.Circle('knob-filter-cutoff', filter)
+    .configure({
+        radius: 72,
+        lineWidth: 6,
+        value: 1,
+        rangeColor: '#1f7',
+        backdropColor: '#424242',
+    })
+    .subscribe({
+        update: data => (synth.cutoff = Math.pow(data, 2) * 20000),
+    })
+    .withLabel('Freq', 423)
 
 ELM.GUI.Circle('knob-filter-q', filter)
     .configure({
@@ -135,18 +156,7 @@ ELM.GUI.Circle('knob-filter-q', filter)
         showHandle: false,
     })
     .subscribe({ update: data => (synth.Q = data * 30) })
-
-ELM.GUI.Circle('knob-filter-cutoff', filter)
-    .configure({
-        radius: 52,
-        lineWidth: 6,
-        value: 1,
-        rangeColor: '#1f7',
-        backdropColor: '#424242',
-    })
-    .subscribe({
-        update: data => (synth.cutoff = Math.pow(data, 2) * 20000),
-    })
+    .withLabel('Q', 510)
 
 const filterType = window.document.createElement('p')
 let selectedFilterIndex = 0
@@ -175,12 +185,7 @@ ELM.GUI.Circle('knob-convolver-blend', convolver)
         update: data =>
             synth.convolverGain.gain.setValueAtTime(data, context.currentTime),
     })
-
-// ELM.GUI.Circle('knob-convolver-blend', convolver)
-//     .configure({radius: 52, lineWidth: 4, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false});
-
-// ELM.GUI.Circle('knob-convolver-cutoff', convolver)
-//     .configure({radius: 52, lineWidth: 4, rangeColor: '#1cf', backdropColor: '#424242', showHandle: false});
+    .withLabel('Blend')
 
 /**
  *      [=== CONVOLVER ===]
@@ -197,6 +202,7 @@ ELM.GUI.Circle('knob-master-pan', master)
         showHandle: false,
     })
     .subscribe({ update: data => (synth.controls.pan = data) })
+    .withLabel('Pan')
 
 ELM.GUI.Circle('knob-master-amp', master)
     .configure({
@@ -207,6 +213,7 @@ ELM.GUI.Circle('knob-master-amp', master)
         backdropColor: '#424242',
     })
     .subscribe({ update: data => (synth.amp = data) })
+    .withLabel('Amp')
 
 ELM.GUI.XYPad('elements-xypad-3', pads)
     .configure({ width: 500, height: 250 })
@@ -231,12 +238,6 @@ const xypad2 = ELM.GUI.XYPad('elements-xypad-4', pads)
 
 xypad2.element.style.marginLeft = 8
 
-const scope = ELM.GUI.Scope('elements-scope', pads)
-scope
-    .init(context)
-    .connect(synth.master)
-    .run()
-
 wave.load('audio/gun-reload.wav', function(buffer) {
     synth.buffer = buffer
     samples_list.children[5].style.color = '#aaa'
@@ -247,17 +248,14 @@ wave_IR.load('IRs/warehouse.wav', function(buffer) {
     synth.convolver.buffer = buffer
 })
 
-const record = document.querySelector('.record-button')
-const close = document.querySelector('.close')
-const minimize = document.querySelector('.minimize')
-
-close.onclick = event => this.window.close()
+document.querySelector('.close').onclick = () => this.window.close()
 
 const dest = context.createMediaStreamDestination()
-const mediaRecorder = new MediaRecorder(dest.stream)
+const mediaRecorder = new MediaRecorder(dest.strea)
 synth.master.connect(dest)
 dest.connect(context.destination)
 
+const record = document.querySelector('.record-button')
 let recording = false
 record.onclick = function() {
     if (!recording) {
@@ -277,34 +275,6 @@ mediaRecorder.ondataavailable = e => {
 }
 
 mediaRecorder.onstop = function(e) {
-    // let fileReader = new FileReader();
-    // // fileReader.read
-    // fileReader.onload = function() {
-
-    //     var incomingData = new Uint8Array(this.result);
-    //     var i, l = incomingData.length;
-    //     var buffer = new Float32Array(incomingData.length);
-    //     for (i = 0; i < l; i++) {
-    //         buffer[i] = (incomingData[i] - 128) / 128.0;
-    //     }
-
-    //     const encoder = new WavAudioEncoder(22000, 1);
-    //     var buffers = [];
-    //     buffers.push(buffer);
-    //     encoder.encode(buffers);
-    //     const blob = encoder.finish();
-    //     console.log(blob);
-    //     encoder.cancel();
-    //     // fileReader.readAsArrayBuffer(chunks[0]);
-    // // var blob = new Blob(chunks, { 'type' : 'audio/wav; codecs=opus' });
-    //     var audioURL = window.URL.createObjectURL(blob);
-    //     var anchor = document.createElement('a');
-    //     anchor.href = audioURL;
-    //     anchor.download = `nubula-audio-recording.wav`;
-    //     anchor.click();
-
-    // };
-    // fileReader.readAsArrayBuffer(chunks[0]);
     var blob = new Blob(chunks, { type: 'audio/webm; codecs=opus' })
     var audioURL = window.URL.createObjectURL(blob)
     var anchor = document.createElement('a')
