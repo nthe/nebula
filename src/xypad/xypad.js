@@ -84,8 +84,8 @@ XYPad.prototype = {
 
         if (this.config.showHandle) {
             this.ctx.beginPath()
-            this.ctx.arc(left, top, 4, 0, 2 * Math.PI)
-            this.ctx.lineWidth = 1
+            this.ctx.arc(left, top, 12, 0, 2 * Math.PI)
+            this.ctx.lineWidth = 3
             this.ctx.fillStyle = 'transparent'
             this.ctx.strokeStyle = '#fc1'
             this.ctx.stroke()

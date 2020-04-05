@@ -55,6 +55,7 @@ wave_IR.load('./assets/audio/impulses/RE301.wav', function (buffer) {
 // -------------------------------------------------------------- GRAIN CONTROL PANEL
 
 ELM.GUI.Circle('knob-grain-skew', consolePanel2)
+    .addLabel('SKEW')
     .configure({
         rangeColor: '#fff',
         value: 0.25,
@@ -62,6 +63,7 @@ ELM.GUI.Circle('knob-grain-skew', consolePanel2)
     .subscribe({ update: (data) => (synth.controls.grainSkew = data) })
 
 ELM.GUI.Circle('knob-grain-size', consolePanel2)
+    .addLabel('SIZE')
     .configure({
         rangeColor: '#fff',
         value: 0.5,
@@ -69,6 +71,7 @@ ELM.GUI.Circle('knob-grain-size', consolePanel2)
     .subscribe({ update: (data) => (synth.controls.grainSize = data) })
 
 ELM.GUI.Circle('knob-grain-density', consolePanel2)
+    .addLabel('DENS')
     .configure({
         rangeColor: '#fff',
         value: 0.8,
@@ -76,6 +79,7 @@ ELM.GUI.Circle('knob-grain-density', consolePanel2)
     .subscribe({ update: (data) => (synth.controls.density = data * 100) })
 
 ELM.GUI.Circle('knob-grain-spread', consolePanel2)
+    .addLabel('SPRD')
     .configure({
         rangeColor: '#fff',
         value: 0.8,
@@ -85,6 +89,7 @@ ELM.GUI.Circle('knob-grain-spread', consolePanel2)
 // -------------------------------------------------------------- CONSOLE PANEL
 
 ELM.GUI.Circle('knob-master-amp', consolePanel)
+    .addLabel('GAIN')
     .configure({
         value: 0.8,
         rangeColor: '#f55',
@@ -92,6 +97,7 @@ ELM.GUI.Circle('knob-master-amp', consolePanel)
     .subscribe({ update: (data) => (synth.amp = data) })
 
 ELM.GUI.Circle('knob-convolver-blend', consolePanel)
+    .addLabel('ECHO')
     .configure({
         rangeColor: '#1cf',
         value: 0.75,
@@ -102,6 +108,7 @@ ELM.GUI.Circle('knob-convolver-blend', consolePanel)
     })
 
 ELM.GUI.Circle('knob-filter-cutoff', consolePanel)
+    .addLabel('FREQ')
     .configure({
         rangeColor: '#1f7',
         value: 1,
@@ -111,6 +118,7 @@ ELM.GUI.Circle('knob-filter-cutoff', consolePanel)
     })
 
 ELM.GUI.Circle('knob-filter-q', consolePanel)
+    .addLabel('Q')
     .configure({
         rangeColor: '#1f7',
         value: 0.1,

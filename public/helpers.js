@@ -12,7 +12,7 @@ function attachFilterTypeSwitch(synth) {
     return filterType
 }
 
-const SAMPLES = ['Chair', 'Door', 'Glass', 'Metal']
+const SAMPLES = ['Chair', 'Door', 'Glass', 'Metal', 'Radio']
 
 function loadAudioSamples(container, onClicked) {
     for (let sample of SAMPLES) {
@@ -34,7 +34,14 @@ function loadAudioSamples(container, onClicked) {
     })
 }
 
-const AUDIO_IRS = ['Bat Cave', 'Church', 'MicroVerb', 'RE301', 'Steinman Hall']
+const AUDIO_IRS = [
+    'Bat Cave',
+    'Church',
+    'MicroVerb',
+    'RE301',
+    'Steinman Hall',
+    'Waterfront Park',
+]
 
 function loadImpulseResponses(container, onClicked) {
     for (let sample of AUDIO_IRS) {
@@ -68,6 +75,7 @@ function attachRecordingService(context, synth) {
     let recording = false
 
     record.onclick = function () {
+        console.log('clicked')
         if (!recording) {
             mediaRecorder.start()
             record.style.fill = 'red'

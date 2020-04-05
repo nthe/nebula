@@ -61,7 +61,7 @@ function grain(voice) {
  * @param {Synth} synth reference to synth
  * @returns {Voice.init} self
  */
-const Voice = synth => new Voice.init(synth)
+const Voice = (synth) => new Voice.init(synth)
 
 /**
  * Voice class.
@@ -70,7 +70,7 @@ const Voice = synth => new Voice.init(synth)
  * @param {Synth} synth reference to synth
  * @returns {Voice.init} self
  */
-Voice.init = function(synth) {
+Voice.init = function (synth) {
     this.master = context.createGain()
     // this.master.connect(synth.master);
     this.master.connect(synth.filter)
@@ -84,7 +84,7 @@ Voice.prototype = {
     offset: 0, // sample position
     trans: 1, // playback speed
     attack: 0.2, // sound attack
-    release: 0.2, // sound release
+    release: 0.1, // sound release
     amp: 0.95, // amplitude
 
     grainSize: 1, // grain size (length)
@@ -97,10 +97,10 @@ Voice.prototype = {
      * @method play
      * @description play current grain cloud
      */
-    play: function() {
+    play: function () {
         const that = this
         this.release = Math.max(0.01, this.release)
-        this.play = function() {
+        this.play = function () {
             grain(that)
             that.timeout = setTimeout(that.play, 100 - that.density)
         }
@@ -116,9 +116,13 @@ Voice.prototype = {
      * @method stop
      * @description stop current grain cloud
      */
-    stop: function() {
+    stop: function () {
         const that = this
         this.master.gain.linearRampToValueAtTime(
+            0.0,
+            this.context.currentTime + this.release
+        )
+        this.synth.convolver.gain.linearRampToValueAtTime(
             0.0,
             this.context.currentTime + this.release
         )
@@ -137,7 +141,7 @@ Voice.init.prototype = Voice.prototype
  * @param {AudioContext} context audio context
  * @returns {Synth.init} self
  */
-const Synth = context => new Synth.init(context)
+const Synth = (context) => new Synth.init(context)
 
 /**
  * Synth class.
@@ -146,7 +150,7 @@ const Synth = context => new Synth.init(context)
  * @param {AudioContext} context audio context
  * @returns {Synth.init} self
  */
-Synth.init = function(context) {
+Synth.init = function (context) {
     this.voices = {}
     this.buffer = null
     this.context = context
@@ -211,7 +215,7 @@ Synth.prototype = {
      * @description update callback
      * @param {any} data any data
      */
-    update: function(data) {
+    update: function (data) {
         if (
             data &&
             data.hasOwnProperty('freq') &&

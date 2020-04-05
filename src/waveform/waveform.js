@@ -52,7 +52,7 @@ WaveForm.prototype = {
 
     drawWave: function (data) {
         var ctx = this.backdrop.getContext('2d')
-        var fctx = this.front.getContext('2d')
+        // var fctx = this.front.getContext('2d')
         var w = ctx.canvas.width
         var h = ctx.canvas.height
         //draw the buffer

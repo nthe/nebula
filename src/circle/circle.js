@@ -5,7 +5,7 @@ const utils = require('../utils/utils')
 // default configuration of knob/gauge
 const DEFAULT_CIRCLE_CONFIG = {
     value: 0.18,
-    radius: 52,
+    radius: 64,
     lineWidth: 3,
     startAngle: 180,
     sweepAngle: 360,
@@ -77,6 +77,23 @@ Circle.init = function (id, parent) {
 }
 
 Circle.prototype = {
+    /**
+     * @method addLabel
+     * @description add label to knob
+     * @param {string} text label text
+     * @returns {Circle} this
+     */
+    addLabel: function (text) {
+        const label = document.createElement('p')
+        label.innerText = text
+        label.style.position = 'absolute'
+        label.style.color = '#888'
+        label.style.top = this.element.offsetTop + 15
+        label.style.fontSize = '.7rem'
+        this.parent.appendChild(label)
+        return this
+    },
+
     /**
      * @method render
      * @description (re)render knob/gauge
