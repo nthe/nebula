@@ -1,0 +1,50 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Elements</title>
+        <link rel="stylesheet" href="./style.css" />
+    </head>
+
+    <body>
+        <section class="system-bar">
+            <img
+                src="./assets/icons/media-record.svg"
+                class="record-button"
+                alt="music"
+            />
+            <div class="record-button-bg">record</div>
+            <img
+                class="close"
+                src="./assets/icons/x.svg"
+                style="float: right; margin-right: 24px;"
+                alt="music"
+            />
+        </section>
+        <section class="centered-content">
+            <section
+                class="centered-content control-panel filter-controls"
+            ></section>
+        </section>
+        <section class="centered-content convolve-master-wrapper">
+            <section class="centered-content control-panel convolver">
+                <h5>convolver</h5>
+            </section>
+            <section class="centered-content control-panel master">
+                <h5>master</h5>
+            </section>
+        </section>
+        <section class="centered-content" id="panel"></section>
+        <section class="centered-content" id="right-controls"></section>
+        <section class="status-bar"></section>
+
+        <section class="samples">
+            <ul class="samples-list"></ul>
+            <ul class="ir-samples-list"></ul>
+        </section>
+
+        <script src="../lib/index.js"></script>
+        <script src="./script.js"></script>
+    </body>
+</html>
