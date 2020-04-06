@@ -1,21 +1,33 @@
 {
-    "name": "synth",
-    "version": "1.0.0",
-    "description": "",
+    "name": "nebula",
+    "productName": "nebula",
+    "version": "0.1.0",
+    "description": "Granular syntesizer, audio scrobler and sound explorer.",
     "main": "main.js",
     "scripts": {
         "start": "electron .",
         "build": "npm run browserify",
         "all": "npm run build && npm run start",
         "browserify": "browserify ./src/index.js --standalone ELM -o ./lib/index.js",
-        "minify": "node node_modules/uglify-js-es6/bin/uglifyjs lib/index.js --compress --mangle -o lib/index.min.js"
+        "minify": "node node_modules/uglify-js-es6/bin/uglifyjs lib/index.js --compress --mangle -o lib/index.min.js",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder"
     },
+    "build": {
+        "appId": "nebula",
+        "linux": {
+            "target": "AppImage",
+            "category": "Audio"
+        }
+    },
+    "postinstall": "electron-builder install-app-deps",
     "author": "Juraj Onuska @ 2020",
     "license": "ISC",
     "devDependencies": {
         "browserify": "^16.1.1",
         "canvas": "^2.6.1",
         "electron": "^8.2.0",
+        "electron-builder": "^22.4.1",
         "nodemon": "^1.17.3",
         "typescript": "^3.8.3",
         "uglify-js-es6": "^2.8.9"
