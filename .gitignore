@@ -2,6 +2,5 @@ node_modules/
 .idea/
 .git/
 coverage/
-docs/
 dist/
 # audio/

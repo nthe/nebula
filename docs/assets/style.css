@@ -1,0 +1,45 @@
+
+* {
+  box-sizing: border-box;
+}
+
+
+body {
+  background-color: #e5e5e5;
+  font-family: 'Poiret One', monospace;
+  padding: 0;
+  margin: 0;
+}
+
+.nebula {
+  height: 500px;
+  position: sticky;
+  top: calc(50vh - 250px);
+  left: calc(50vw - 330px);
+  box-shadow: 0 0 16px #222;
+  z-index: 10;
+}
+
+h1 {
+  font-size: 6rem;
+}
+
+section {
+  width: 100%;
+  height: 100%;
+}
+
+.intro {
+  margin-top: -500px;
+  text-align: center;
+}
+
+.tutorial {
+  background-color: #bbb;
+  clip-path: polygon(0% 10%, 100% 0%, 100% 90%, 0% 100%);
+}
+
+.outro {
+  background-color: #1155aa;
+  clip-path: polygon(0% 40%, 100% 30%, 100% 100%, 0% 100%);
+}
