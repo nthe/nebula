@@ -72,7 +72,7 @@ const Voice = (synth) => new Voice.init(synth)
  */
 Voice.init = function (synth) {
     this.master = context.createGain()
-    // this.master.connect(synth.master);
+    this.synth = synth
     this.master.connect(synth.filter)
     this.master.connect(synth.convolverGain)
     this.master.gain.setValueAtTime(0.95, 0)
@@ -84,7 +84,7 @@ Voice.prototype = {
     offset: 0, // sample position
     trans: 1, // playback speed
     attack: 0.2, // sound attack
-    release: 0.1, // sound release
+    release: 0.25, // sound release
     amp: 0.95, // amplitude
 
     grainSize: 1, // grain size (length)
@@ -105,6 +105,7 @@ Voice.prototype = {
             that.timeout = setTimeout(that.play, 100 - that.density)
         }
         this.play()
+
         this.master.gain.setValueAtTime(0.0, this.context.currentTime)
         this.master.gain.linearRampToValueAtTime(
             this.amp,
@@ -116,16 +117,13 @@ Voice.prototype = {
      * @method stop
      * @description stop current grain cloud
      */
-    stop: function () {
+    stop: function (callback) {
         const that = this
         this.master.gain.linearRampToValueAtTime(
             0.0,
             this.context.currentTime + this.release
         )
-        this.synth.convolver.gain.linearRampToValueAtTime(
-            0.0,
-            this.context.currentTime + this.release
-        )
+        callback(this.context.currentTime + this.release)
         setTimeout(() => {
             clearTimeout(that.timeout)
         }, this.release * 1001)
@@ -151,7 +149,7 @@ const Synth = (context) => new Synth.init(context)
  * @returns {Synth.init} self
  */
 Synth.init = function (context) {
-    this.voices = {}
+    this.voice = null
     this.buffer = null
     this.context = context
 
@@ -221,12 +219,26 @@ Synth.prototype = {
             data.hasOwnProperty('freq') &&
             data.hasOwnProperty('state')
         ) {
-            if (data.state === 'on') {
-                this.voices[data.voice] = Voice(this)
-                // this.voices[data.voice].trans = data.freq / 32.7;
-                this.voices[data.voice].play()
+            if (data.state === 'on' && this.voice == null) {
+                this.master.gain.linearRampToValueAtTime(
+                    Voice.prototype.amp,
+                    Voice.prototype.attack
+                )
+                this.convolverGain.gain.linearRampToValueAtTime(
+                    Voice.prototype.amp,
+                    Voice.prototype.attack
+                )
+                this.voice = Voice(this)
+                this.voice.play()
             } else {
-                this.voices[data.voice].stop()
+                this.voice.stop((release) => {
+                    this.voice = null
+                    this.master.gain.linearRampToValueAtTime(0.0, release)
+                    this.convolverGain.gain.linearRampToValueAtTime(
+                        0.0,
+                        release
+                    )
+                })
             }
         }
     },

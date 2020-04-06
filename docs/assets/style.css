@@ -7,15 +7,7 @@ body {
     font-family: 'Poiret One', monospace;
     padding: 0;
     margin: 0;
-}
-
-.nebula {
-    height: 500px;
-    position: sticky;
-    top: calc(50vh - 250px);
-    left: calc(50vw - 330px);
-    box-shadow: 0 0 16px #222;
-    z-index: 10;
+    font-size: 22px;
 }
 
 h1 {
@@ -23,23 +15,70 @@ h1 {
 }
 
 h1,
-h2 {
+h3 {
     margin: 0;
 }
 
-h2 {
-    margin-top: 48px;
-}
-
-section {
+.panel-container {
+    position: absolute;
     width: 100%;
-    height: 100%;
 }
 
-.intro {
-    margin-top: -500px;
+.panel {
+    height: 100vh;
+}
+
+.front {
+    z-index: 3;
+    height: 300vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nebula {
+    height: 400px;
+    position: sticky;
+    top: calc(50vh - 200px);
+    box-shadow: 0 0 16px #222;
+    z-index: 10;
+}
+
+.intro-text {
+    width: 100%;
+    height: 100vh;
+    margin-top: calc(50vh - 800px);
     text-align: center;
 }
+
+.tutorial-text {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.tutorial-image {
+    height: 1000px;
+    margin-left: 8%;
+    margin-top: -5%;
+}
+
+.donate {
+    bottom: 3%;
+    position: absolute;
+    color: white;
+    transition: opacity 0.3s;
+    opacity: 0.5;
+    font-size: 2rem;
+    font-weight: 400;
+    text-align: center;
+}
+
+.donate:hover {
+    opacity: 1;
+}
+
+/* background panels */
 
 .tutorial {
     background-color: #bbb;

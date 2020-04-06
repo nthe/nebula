@@ -90,6 +90,7 @@ Circle.prototype = {
         label.style.color = '#888'
         label.style.top = this.element.offsetTop + 15
         label.style.fontSize = '.7rem'
+        label.className = 'element-knob-label'
         this.parent.appendChild(label)
         return this
     },

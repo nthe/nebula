@@ -1,18 +1,68 @@
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nebula</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet"> 
-  <link rel="stylesheet" href="assets/style.css">
-</head>
-<body>
-  <img src="assets/screen.png" alt="image" class="nebula">
-  <section class="intro">
-    <h2>Hello, I'm</h2>
-    <h1>NEBULA</h1>
-  </section>
-  <section class="tutorial"></section>
-  <section class="outro"></section>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Nebula</title>
+        <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="assets/style.css" />
+    </head>
+    <body>
+        <div class="panel-container front">
+            <img src="assets/screen.png" alt="image" class="nebula" />
+
+            <!-- introduction -->
+
+            <div class="intro-text" data-aos="fade-up">
+                <h3>Hello there, this is</h3>
+                <h1>NEBULA</h1>
+                <h3>Granual synthesizer, audio scrobbler and sound explorer</h3>
+            </div>
+
+            <!-- tutorial  -->
+
+            <div class="tutorial-text" data-aos="fade-up" data-aos-offset="800">
+                <img src="./assets/tutorial.png" class="tutorial-image" />
+            </div>
+
+            <!-- references  -->
+
+            <div class="references"></div>
+
+            <!-- donate link -->
+
+            <a
+                href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HWT8JAEDTJQYJ&source=url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="donate"
+                data-aos="fade-down"
+            >
+                <p>
+                    MADE FOR YOU WITH ❤️
+                    <br />
+                    <small>
+                        CONSIDER BUYING ME A &#x1F37A;
+                    </small>
+                    <br />
+                </p>
+            </a>
+        </div>
+
+        <!-- background panels -->
+
+        <div class="panel-container">
+            <div class="panel intro"></div>
+            <div class="panel tutorial"></div>
+            <div class="panel outro"></div>
+        </div>
+
+        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+        <script>
+            AOS.init()
+        </script>
+    </body>
 </html>
