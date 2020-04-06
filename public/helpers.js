@@ -67,15 +67,11 @@ function attachRecordingService(context, synth) {
     const dest = context.createMediaStreamDestination()
     const mediaRecorder = new MediaRecorder(dest.stream)
     synth.master.connect(dest)
-    setTimeout(() => {
-        dest.connect(context.destination)
-    }, 1000)
 
     const record = document.querySelector('.record-button')
     let recording = false
 
     record.onclick = function () {
-        console.log('clicked')
         if (!recording) {
             mediaRecorder.start()
             record.style.fill = 'red'
