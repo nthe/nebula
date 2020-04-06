@@ -8,8 +8,7 @@ const utils = require('../utils/utils')
  */
 function grain(voice) {
     if (!voice.buffer) return
-    if (voice.grains > 500) return
-    voice.grains++
+
     const context = voice.context
     const doPan = parseInt(utils.random(0, 3), 10)
     const gain = context.createGain()
@@ -47,11 +46,11 @@ function grain(voice) {
     gain.gain.linearRampToValueAtTime(voice.amp, context.currentTime + attack)
     gain.gain.linearRampToValueAtTime(0, context.currentTime + voice.grainSize)
     source.stop(context.currentTime + voice.grainSize)
-    setTimeout(() => {
-        voice.grains--
+
+    return () => {
         gain.disconnect()
         if (doPan === 1) panner.disconnect()
-    }, voice.grainSize * 1001)
+    }
 }
 
 /**
@@ -72,19 +71,21 @@ const Voice = (synth) => new Voice.init(synth)
  */
 Voice.init = function (synth) {
     this.master = context.createGain()
+    this.active = false
     this.synth = synth
     this.master.connect(synth.filter)
     this.master.connect(synth.convolverGain)
     this.master.gain.setValueAtTime(0.95, 0)
     ;(this.context = synth.context), (this.buffer = synth.buffer)
     this.grains = 0
+    this.grainsList = []
 }
 
 Voice.prototype = {
     offset: 0, // sample position
     trans: 1, // playback speed
     attack: 0.2, // sound attack
-    release: 0.25, // sound release
+    release: 0.5, // sound release
     amp: 0.95, // amplitude
 
     grainSize: 1, // grain size (length)
@@ -101,9 +102,18 @@ Voice.prototype = {
         const that = this
         this.release = Math.max(0.01, this.release)
         this.play = function () {
-            grain(that)
+            if (that.grainsList.length > 50) {
+                let disconnector = that.grainsList.shift()
+                disconnector()
+            }
+
+            that.grainsList.push(grain(that))
+
+            if (!that.active) return
+
             that.timeout = setTimeout(that.play, 100 - that.density)
         }
+        this.active = true
         this.play()
 
         this.master.gain.setValueAtTime(0.0, this.context.currentTime)
@@ -118,15 +128,12 @@ Voice.prototype = {
      * @description stop current grain cloud
      */
     stop: function (callback) {
-        const that = this
         this.master.gain.linearRampToValueAtTime(
             0.0,
             this.context.currentTime + this.release
         )
+        this.active = false
         callback(this.context.currentTime + this.release)
-        setTimeout(() => {
-            clearTimeout(that.timeout)
-        }, this.release * 1001)
     },
 }
 
@@ -160,7 +167,7 @@ Synth.init = function (context) {
     this.filter.gain.setValueAtTime(0.5, this.context.currentTime)
 
     this.convolver = context.createConvolver()
-    this.convolver.loop = true
+    this.convolver.loop = false
     this.convolver.normalize = true
     this.convolverGain = context.createGain()
     this.convolverGain.gain.setValueAtTime(0, this.context.currentTime)
@@ -220,24 +227,11 @@ Synth.prototype = {
             data.hasOwnProperty('state')
         ) {
             if (data.state === 'on' && this.voice == null) {
-                this.master.gain.linearRampToValueAtTime(
-                    Voice.prototype.amp,
-                    Voice.prototype.attack
-                )
-                this.convolverGain.gain.linearRampToValueAtTime(
-                    Voice.prototype.amp,
-                    Voice.prototype.attack
-                )
                 this.voice = Voice(this)
                 this.voice.play()
             } else {
-                this.voice.stop((release) => {
+                this.voice.stop(() => {
                     this.voice = null
-                    this.master.gain.linearRampToValueAtTime(0.0, release)
-                    this.convolverGain.gain.linearRampToValueAtTime(
-                        0.0,
-                        release
-                    )
                 })
             }
         }

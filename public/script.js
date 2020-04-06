@@ -8,11 +8,11 @@ window.AudioContext =
 const context = new AudioContext()
 
 // get references
-const pads = document.querySelector('#panel')
+const controlPanel = document.querySelector('#panel')
 const consolePanel = document.querySelector('.console')
-const consolePanel2 = document.querySelector('.console2')
-const samples_list = document.querySelector('.samples-list')
-const ir_samples_list = document.querySelector('.ir-samples-list')
+const grainPanel = document.querySelector('.console2')
+const samples = document.querySelector('.samples-list')
+const impulses = document.querySelector('.ir-samples-list')
 
 // -------------------------------------------------------------- ENGINE SETUP
 
@@ -20,41 +20,44 @@ const synth = ELM.Synth(context)
 
 ELM.KeyBoard().subscribe(synth)
 
-ELM.GUI.Scope('elements-scope', pads).init(context).connect(synth.master).run()
+ELM.GUI.Scope('elements-scope', controlPanel)
+    .init(context)
+    .connect(synth.master)
+    .run()
 
 // -------------------------------------------------------------- RESOURCES
 
-loadAudioSamples(samples_list, (sample) => {
-    wave.load(sample, function (buffer) {
+loadAudioSamples(samples, (sample) => {
+    waveSample.load(sample, function (buffer) {
         synth.buffer = buffer
     })
 })
 
-loadImpulseResponses(ir_samples_list, (sample) => {
-    wave_IR.load(sample, function (buffer) {
+loadImpulseResponses(impulses, (sample) => {
+    waveImpulse.load(sample, function (buffer) {
         synth.convolver.buffer = buffer
     })
 })
 
 // -------------------------------------------------------------- WAVEFORM SETUP
 
-const wave = ELM.GUI.WaveForm('elements-waveform-1', pads, synth)
+const waveSample = ELM.GUI.WaveForm('elements-waveform-1', controlPanel, synth)
 
-const wave_IR = ELM.GUI.WaveForm('elements-waveform-2', pads)
+const waveImpulse = ELM.GUI.WaveForm('elements-waveform-2', controlPanel)
 
-wave.load('./assets/audio/samples/Chair.wav', function (buffer) {
+waveSample.load('./assets/audio/samples/Chair.wav', function (buffer) {
     synth.buffer = buffer
-    samples_list.children[0].classList.toggle('active')
+    samples.children[0].classList.toggle('active')
 })
 
-wave_IR.load('./assets/audio/impulses/RE301.wav', function (buffer) {
+waveImpulse.load('./assets/audio/impulses/MicroVerb.wav', function (buffer) {
     synth.convolver.buffer = buffer
-    ir_samples_list.children[3].classList.toggle('active')
+    impulses.children[2].classList.toggle('active')
 })
 
 // -------------------------------------------------------------- GRAIN CONTROL PANEL
 
-ELM.GUI.Circle('knob-grain-skew', consolePanel2)
+ELM.GUI.Circle('knob-grain-skew', grainPanel)
     .addLabel('SKEW')
     .configure({
         rangeColor: '#fff',
@@ -62,7 +65,7 @@ ELM.GUI.Circle('knob-grain-skew', consolePanel2)
     })
     .subscribe({ update: (data) => (synth.controls.grainSkew = data) })
 
-ELM.GUI.Circle('knob-grain-size', consolePanel2)
+ELM.GUI.Circle('knob-grain-size', grainPanel)
     .addLabel('SIZE')
     .configure({
         rangeColor: '#fff',
@@ -70,7 +73,7 @@ ELM.GUI.Circle('knob-grain-size', consolePanel2)
     })
     .subscribe({ update: (data) => (synth.controls.grainSize = data) })
 
-ELM.GUI.Circle('knob-grain-density', consolePanel2)
+ELM.GUI.Circle('knob-grain-density', grainPanel)
     .addLabel('DENS')
     .configure({
         rangeColor: '#fff',
@@ -78,7 +81,7 @@ ELM.GUI.Circle('knob-grain-density', consolePanel2)
     })
     .subscribe({ update: (data) => (synth.controls.density = data * 100) })
 
-ELM.GUI.Circle('knob-grain-spread', consolePanel2)
+ELM.GUI.Circle('knob-grain-spread', grainPanel)
     .addLabel('SPRD')
     .configure({
         rangeColor: '#fff',
@@ -129,14 +132,14 @@ consolePanel.appendChild(attachFilterTypeSwitch(synth))
 
 // -------------------------------------------------------------- XY-PAD PANEL
 
-ELM.GUI.XYPad('elements-xypad-3', pads)
+ELM.GUI.XYPad('elements-xypad-3', controlPanel)
     .configure({ width: 500, height: 250 })
     .subscribe({
         update: function (data) {
             synth.controls.offset = data.x
             synth.controls.trans = Math.pow(1.33 - data.y, 4)
-            wave.value = data.x
-            wave.render()
+            waveSample.value = data.x
+            waveSample.render()
         },
     })
 
